@@ -1,0 +1,161 @@
+/* Reset */
+
+* {
+    padding: 0;
+    margin: 0;
+  }
+  
+  article,aside,details,figcaption,figure,
+  footer,header,hgroup,menu,nav,section { 
+      display:block;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  html {
+    box-sizing: border-box;
+  }
+  
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+  
+  img {
+      width: 100%;
+  }
+
+  /* Main */
+
+  body {
+    font-family: 'Roboto Mono', monospace;
+    font-style: normal;
+    font-weight: 400;
+    color: #2b2c2d;
+    line-height: 24px;
+    background: #f6f6f6;
+    font-size: 14px;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+.wrap {
+	max-width: 1320px;
+    margin: 0 auto;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 20px 40px;
+}
+
+.nav-main li {
+    display: inline-block;
+}
+
+.content {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.card {
+    border-radius: 3px;
+    box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
+    background-color: #fff;
+    padding: 20px 26px;
+    flex-basis: 32.1%;
+    margin: 8px;
+}
+
+.content-full-width .card {
+    flex-basis: 100%;
+}
+
+.card p {
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.inputs-align {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+input[type="text"],
+textarea {
+    font-family: 'Roboto Mono', monospace;
+    width: 50%;
+    border: 1px solid #c5c5c5;
+    box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
+    margin-right: 8px;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+textarea {
+    width: 100%;
+}
+
+button {
+    font-family: 'Roboto Mono', monospace;
+    background-color: #209cee;
+    border: none;
+    padding: 6px 20px;
+    box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
+    color: #fff;
+    border-radius: 3px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.text-from-file {
+    border: 1px solid #c5c5c5;
+    box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: #757575;
+    margin-bottom: 12px;
+    min-height: 36px;
+}
+
+.myCheckbox input {
+    display: none;
+}
+
+.myCheckbox span {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    border: 1px solid #c5c5c5;
+    box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
+    border-radius: 3px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.myCheckbox input:checked + span {
+    background: #209cee;
+    box-shadow: 0 2px 5px 0 rgba(88,88,102,.07), white 0px 0px 0px 1px inset;
+}
+
+.myCheckbox div {
+    font-size: 11px;
+    line-height: 15px;
+    display: inline-block;
+    color: #757575;
+    position: relative;
+    top: -4px;
+}
+
+small {
+    font-size: 11px;
+    display: block;
+    line-height: 15px;
+    color: #757575;
+}

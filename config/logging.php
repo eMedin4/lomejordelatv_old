@@ -76,6 +76,18 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+        
+        'customErrors' => [
+            'driver' => 'single',
+            'path' => storage_path('app/customErrors.log'),
+            'level' => 'debug',
+        ],
+
+        'customMovies' => [
+            'driver' => 'single',
+            'path' => storage_path('app/customMovies.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];
