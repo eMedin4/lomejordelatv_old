@@ -14,11 +14,12 @@ return [
     'channels'  => [ 
         'TVE' => 'La 1',
         'LA2' => 'La 2',
+        'A3' => 'Antena 3',
         'C4' => 'Cuatro',
         'T5' => 'Telecinco',
-        'A3' => 'Antena 3',
         'SEXTA' => 'La Sexta',
         'MV3' => 'Canal #0',
+        'VAMOSD' => '#Vamos',
         'FOXGE' => 'Fox',
         'AXN' => 'AXN',
         'TNT' => 'TNT',

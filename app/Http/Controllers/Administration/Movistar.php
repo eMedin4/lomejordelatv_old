@@ -11,38 +11,48 @@ use Carbon\Carbon;
 use App\Models\MovistarLog;
 use App\Http\Controllers\Administration\Repository;
 
+
 class Movistar extends Controller
 {
 
     private $repository;
+    protected $cmd;
 
     public function __Construct(Repository $repository)
 	{
 		$this->repository = $repository;
-	}
+    }
+
+    //Recibimos la clase MovistarCommand ya que la necesitamos para el writting output
+    public function setCommand($cmd) {
+        $this->cmd = $cmd;
+    }
 
     public function movies()
     {
 
-        echo "<div style='font-size:14px; font-family: \"Roboto Mono\", monospace; margin: 20px'>";
-
         //borramos times ya pasados
         $this->repository->resetMovistar();
-        echo 'borrada programacion antigua...' . "<br>";
+        $this->cmd->info('Borrada programación antigua');
 
         $client = new Client();
 
         $daysToScrap = $this->daysToScrap();
 
         if (!$daysToScrap) {
-            echo 'Todo está descargado';
+            $this->cmd->info('Todo estaba descargado');
             return;
         }
 
+        /*$this->cmd->info("info1"); //color principal
+        $this->cmd->line("linea1"); //sin color
+        $this->cmd->getOutput()->write("write1"); //sin salto de línea al final
+        $this->cmd->comment("comentario1"); //en otro color*/
+
         foreach ($daysToScrap as $dayToScrap) {
-            echo 'descargando fecha:' . $dayToScrap . '...' . "<br>";
+            $this->cmd->info("Descargando fecha $dayToScrap");
             foreach (config('movies.channels') as $channelCode => $channel) {
-                echo $channelCode . " ";
+                $this->cmd->getOutput()->write("$channelCode ... ");
                 $url = 'http://www.movistarplus.es/guiamovil/' . $channelCode . '/' . $dayToScrap;
                 $crawler = $client->request('GET', $url);
                 if ($client->getResponse()->getStatus() !== 200) {
@@ -50,8 +60,9 @@ class Movistar extends Controller
                     Log::channel('customErrors')->debug('Movistar->movies: ' . $url . ' devuelve error ' . $client->getResponse()->getStatus());
                 } 
                 $this->scrapPage($client, $crawler, $dayToScrap, $channelCode, $channel);
+                $this->cmd->line("OK");
             }
-            echo "<br>" . 'Finalizado.' . "<br>";
+            $this->cmd->info("Finalizada fecha fecha $dayToScrap");
             $this->repository->setParam('Movistar', Null, $dayToScrap);
         }
     }

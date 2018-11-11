@@ -188,7 +188,6 @@ class Repository {
             $items = MovistarTime::where('time', '<', Carbon::now()->subHours(5))->get(['time', 'channel', 'channel_code', 'movie_id']);
             MovistarHistory::insert($items->toArray());
             $items = MovistarTime::where('time', '<', Carbon::now()->subHours(5))->delete();
-            dd($items);
         }
     }
 

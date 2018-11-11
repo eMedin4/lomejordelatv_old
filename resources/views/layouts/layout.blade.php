@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lo Mejor de la TV</title>
+    <title>lomejordelatv - películas en televisión</title>
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Roboto:400,500,700,900" rel="stylesheet">
 
