@@ -1,61 +1,8 @@
-/* Colors */
-$white: #fff;
-$dark-grey-5: #191b22;
-$dark-grey-4: #1f232b;
-$dark-grey-3: #282c37;
-$dark-grey-2: #303643;
-$light-grey-5: #d9e1e8;
-$light-grey-4: #9baec8;
-$light-grey-3: #687590;
+$body-font: 'Roboto', sans-serif;
 
-/* Components */
-$background-color: $dark-grey-5;
-$primary-card-color: $dark-grey-3;
-$secondary-card-color: $dark-grey-4;
-$primary-card-break-color: $dark-grey-2;
-$secondary-card-break-color: $dark-grey-5;
-$logo-color: $white;
-$title-color: $white;
-$heading-color: $light-grey-5;
-$text-color: $light-grey-4;
-$program-color: $light-grey-5;
-$tag-color: $light-grey-3;
-
-
-/* Experimental */
-$base-color: #191b22;
-
-
-@function pale($color) {
-    @return lighten( desaturate( $color, 10 ), 30 );
-}
-@function light($color) {
-    @return lighten( saturate( $color, 25 ), 20 );
-}
-@function dark($color) {
-    @return darken( desaturate( $color, 20 ), 12 );
-}
-.test {
-    background: pale($base-color);
-}
-//tool: https://colorme.io/
-
-/*
-
-
-$background-color: #b0eb00;
-$error-color: #b30015;
-$anchor-color: #2a00b3;
-$anchor-hover-color: #0077b3;
-$anchor-visited-color: #00b0b3;
-$anchor-visited-blending-color: #24fbff;
-$tooltip-color: #8a7dff;
-$emphasis-color: #a6a6a6;
-$text-color: #595959;
-$strong-color: #444;
-$username-color: #363636;
-$shadow-color: #303030;
-$border-color: #292929;
-$marquee-color: #111;
-primary-color
-secondary-color
+// Weights
+$light-weight:    300;
+$normal-weight:   400;
+$semibold-weight:   500;
+$bold-weight:     700;
+$black-weight:    900;

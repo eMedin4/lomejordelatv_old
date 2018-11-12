@@ -1,0 +1,36 @@
+.header {
+    padding: 24px 0 20px;
+}
+
+.header-wrap {
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.title {
+    margin: 0 41px 0 10px;
+
+    .icon-tv {
+        font-size: 32px;
+        color: #3c99dc;
+        transform: rotate(10deg);
+        display: inline-block;
+        padding-right: 10px;
+    }
+
+    p {
+        display: inline-block;
+        text-align: center;
+        line-height: 34px;
+        font-weight: 900;
+        color: $white;
+        font-size: 30px;
+        letter-spacing: 1px;
+    }
+
+  }
+  
+  
+  
+  

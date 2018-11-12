@@ -1,0 +1,49 @@
+/* FUNCIONES SOBRE COLORES */
+
+// Aclarar ligeramente un color
+@function tint($color, $percentage) {
+    @return mix(white, $color, $percentage);
+}
+// Oscurecer ligeramente un color
+@function shade($color, $percentage) {
+    @return mix(black, $color, $percentage);
+}
+
+/* COLORES */
+$white: #fff;
+ 
+
+
+$base-color: #282c37;
+$background-color: shade($base-color, 38);
+$primary-card-color: $base-color;
+$secondary-card-color: shade($base-color, 4);
+$primary-card-break-color: tint($base-color, 4);
+$secondary-card-break-color: shade($base-color, 8);
+
+$front-color: adjust-hue(saturate(tint($base-color, 80), 25), -15deg);
+$heading-color: tint($front-color, 60);
+$text-color: $front-color;
+$program-color: tint($front-color, 10);
+$tag-color: shade($front-color, 10);
+
+$logo-color: $white;
+$title-color: $white;
+
+
+
+/* ANTIGUOS COLORES */
+$dark-grey-5: #191b22;
+$dark-grey-4: #1f232b;
+$dark-grey-3: #282c37;
+$dark-grey-2: #303643;
+$light-grey-5: #d9e1e8;
+$light-grey-4: #9baec8;
+$light-grey-3: #687590;
+
+
+
+
+
+//tool: https://colorme.io/
+

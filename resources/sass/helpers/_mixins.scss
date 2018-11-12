@@ -1,0 +1,8 @@
+// Centramos algo sin preocuparnos de márgenes arriba y abajo
+@mixin center-auto {
+    margin: { 
+        left: auto;
+        right: auto;
+    }
+}
+

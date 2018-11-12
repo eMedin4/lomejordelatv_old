@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>lomejordelatv - películas en televisión</title>
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700|Roboto:400,500,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
 
 
 </head>
@@ -17,7 +18,7 @@
                 <span class="icon-tv"></span>
 				<p>lomejordelatv</p>
             </div>
-            <nav class="section-links">
+            <nav class="main-menu">
                 <a href="">Televisión</a>
                 <a href="">Netflix</a>
                 <a href="">HBO</a>

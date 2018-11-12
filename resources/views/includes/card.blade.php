@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="card-inner">
     <a href="{{ route('movie', $record->movie->slug) }}">
         @if ($thumb)
             <img src="https://s3.eu-west-3.amazonaws.com/lomejordelatv/movieimages/backgrounds/sml/{{ $record->movie->slug }}.jpg" alt="">
