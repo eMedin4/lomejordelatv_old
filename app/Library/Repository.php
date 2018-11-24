@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Administration;
+namespace App\Library;
 
 use App\Models\Character;
 use App\Models\Comment;
@@ -8,10 +8,13 @@ use App\Models\Genre;
 use App\Models\Movie;
 use App\Models\Param;
 use App\Models\User;
+use App\Models\Netflix;
 use App\Models\MovistarTime;
 use App\Models\MovistarHistory;
+use App\Models\NetflixLogs;
+use App\Models\Verified;
 
-Use App\Http\Controllers\Administration\Images;
+Use App\Library\Images;
 use Carbon\Carbon;
 
 class Repository {
@@ -30,6 +33,13 @@ class Repository {
         return false;
     }
 
+    public function getMovieFromFaId($faid)
+    {
+        $movie = Movie::where('fa_id', $faid)->first();
+        if ($movie) return $movie;
+        return false;
+    }
+
     public function update($card)
     {
         $movie = Movie::where('fa_id', $card['fa_id'])->first();
@@ -38,44 +48,48 @@ class Repository {
         $movie->save();
     }
 
-    public function storeMovie($data)
+    public function storeMovie($data, $source)
     {
         $movie = Movie::firstOrNew(['fa_id' => $data['fa_id']]);
-        $movie->title            = $data['fa_title'];
-        $movie->original_title   = $data['fa_original'];
-        $movie->country          = $data['country'];
-        $movie->duration         = $data['fa_duration'];
-        $movie->review           = $data['tm_review'] ? $data['tm_review'] : $data['fa_review'];
-        $movie->fa_id            = $data['fa_id'];
-        $movie->tm_id            = $data['tm_id'];
-        $movie->year             = $data['fa_year'];
-        $movie->im_id            = $data['im_id'];
-        $movie->fa_rat           = $data['fa_rat'];
-        $movie->fa_count         = $data['fa_count'];
-        $movie->im_rat           = $data['im_rat'];
-        $movie->im_count         = $data['im_count'];
-        $movie->rt_rat           = $data['rt_rat'];
-        $movie->fa_popularity    = $data['fa_popularity']['step2'];
-        $movie->im_popularity    = $data['im_popularity']['step2'];
+
+        if ($movie->exists) $status = 'updated';
+        else $status = 'created';
+
+        $movie->title               = $data['fa_title'];
+        $movie->original_title      = $data['fa_original'];
+        $movie->country             = $data['fa_country'];
+        $movie->duration            = $data['fa_duration'];
+        $movie->review              = $data['tm_review'] ? $data['tm_review'] : $data['fa_review'];
+        $movie->fa_id               = $data['fa_id'];
+        $movie->tm_id               = $data['tm_id'];
+        $movie->year                = $data['fa_year'];
+        $movie->im_id               = $data['im_id'];
+        $movie->fa_rat              = $data['fa_rat'];
+        $movie->fa_count            = $data['fa_count'];
+        $movie->im_rat              = $data['im_rat'];
+        $movie->im_count            = $data['im_count'];
+        $movie->rt_rat              = $data['rt_rat'];
+        $movie->fa_popularity       = $data['fa_popularity']['step2'];
+        $movie->im_popularity       = $data['im_popularity']['step2'];
         $movie->fa_popularity_class = $data['fa_popularity']['class'];
         $movie->im_popularity_class = $data['im_popularity']['class'];
-        $movie->reliable_duration   = $data['reliable_duration'];
+        $movie->reliable_duration   = false;
 
         if (!$movie->exists) { /*solo recalculamos slugs para nuevas películas*/
             $movie->slug             = $this->setSlug($data['fa_title']);
         }
 
         $poster = isset($data['poster']) ? $data['poster'] : null;
-        $background = isset($data['background']) ? $data['poster'] : null;
+        $background = isset($data['background']) ? $data['background'] : null;
 
         if ($poster) {
-            $savePoster = $this->images->savePoster($poster, $movie->slug);
+            $savePoster = $this->images->savePoster($poster, $movie->slug, $source);
             if ($savePoster) $movie->check_poster = 1;
             else $movie->check_poster = 0;
         }
 
         if ($background) {
-            $saveBackground = $this->images->saveBackground($background, $movie->slug);
+            $saveBackground = $this->images->saveBackground($background, $movie->slug, $source);
             if ($saveBackground) $movie->check_background = 1;
             else $movie->check_background = 0;
         }
@@ -129,6 +143,8 @@ class Repository {
         //SINCRONIZAMOS GENRES
         $values = array_column($data['genres'], 'id');
         $movie->genres()->sync($values);
+
+        return ['status' => $status, 'id' => $movie->id];
 
     }
 
@@ -191,6 +207,11 @@ class Repository {
         }
     }
 
+    public function resetNetflix()
+    {
+        Netflix::truncate();
+    }
+
     public function setMovie($movie, $datetime, $channelCode, $channel)
     {
         $match = MovistarTime::where([['movie_id', '=', $movie->id],['time', '=', $datetime]])->first();
@@ -235,24 +256,101 @@ class Repository {
 		return false;
     }
     
-    public function searchFromNetflix($original, $year, $duration)
+    public function getMovieFromNetflix($title, $year)
     {
-        $movies = Movie::where('original_title', $original)
-            ->whereBetween('year', [$year - 1, $year + 1])
-            ->whereBetween('duration', [$duration - 5, $duration + 5])
-            ->get();
-        
-        if ($movies->count() == 1) return $movies->first();
+        //devuelve id o false
 
-        $movies = Movie::where('original_title', 'like', '%' . $original . '%')
+        $movies = Movie::where('original_title', $title)
             ->whereBetween('year', [$year - 1, $year + 1])
-            ->whereBetween('duration', [$duration - 5, $duration + 5])
             ->get();
-        
-        if ($movies->count() == 1) return $movies->first();
+   
+        if ($movies->count() == 1) {  
+            $movie = $movies->first();
+            return $movies->first();
+        }
 
+        $movies = Movie::where('original_title', 'like', '%' . $title . '%')
+            ->whereBetween('year', [$year - 1, $year + 1])
+            ->get();
+
+        if ($movies->count() == 1) {
+            $movie = $movies->first();
+            return $movies->first();
+        }
+
+        $movies = Movie::where('slug', 'like', '%' . str_slug($title) . '%')
+            ->whereBetween('year', [$year - 1, $year + 1])
+            ->get();
+
+        if ($movies->count() == 1) {   
+            $movie = $movies->first();
+            return $movies->first();
+        }
+   
         return false;
     }
+
+    public function setNetflix($nfid, $id)
+    {
+        Netflix::insert([
+            'netflix_id' => $nfid,
+            'movie_id'=> $id
+        ]);
+    }
+
+    public function setNetflixLogs($nfOriginal, $nfYear, $nfImid, $dbOriginal, $dbYear, $dbImid)
+    {
+        NetflixLogs::insert([
+            'db_original' => $dbOriginal,
+            'db_year' => $dbYear,
+            'db_imdb' => $dbImid,
+            'nf_original' => $nfOriginal,
+            'nf_year' => $nfYear,
+            'nf_imdb' => $nfImid,
+        ]);
+    }
+
+    /*
+        checkVerify
+        Funcion: Busca en Verifieds. Si pasas fa devuelve id_2, si pasas otro devuelve id_1 (de fa)
+        Retorna: id o false
+    */
+    public function checkVerify($id, $source)
+    {
+        if ($source == 'fa') {
+            $verify = Verified::where('id_1', $id)->first();
+            if ($verify) return $verify->id_2;
+            else return false;
+        } else {
+            $verify = Verified::where([['source_2', $source], ['id_2', $id]])->first();
+            if ($verify) return $verify->id_1;
+            else return false;
+        }
+    }
+
+    /*
+        getMovieFromId 
+        Funcion: Busca en Movies por fa_id, tm_id o im_id. Si source es 'db' buscará por el id.
+        Retorna: modelo Movie o null
+    */
+    public function getMovieFromId($id, $source)
+    {
+        if ($source == 'db') return Movie::find($id);
+        $column = $source . '_id';
+        return Movie::where($column, $id)->first();
+    }
+
+
+    public function setVerify($source1, $id1, $source2, $id2)
+    {
+        //retorna true si la crea ok y false si ya existía en db
+        $verify = Verified::firstOrCreate(
+            ['source_1' => 'fa', 'id_1' => $id1], 
+            ['source_1' => $source1, 'source_2' => $source2, 'id_1' => $id1, 'id_2' => $id2]
+        );
+        return $verify->wasRecentlyCreated;
+    }
+
 
 }
 

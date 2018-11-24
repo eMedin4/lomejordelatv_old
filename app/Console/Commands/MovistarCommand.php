@@ -2,17 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\Administration\Movistar;
+use App\Library\Providers\Movistar;
 use Illuminate\Console\Command;
 
 class MovistarCommand extends Command
 {
 
-    protected $signature = 'lmtv:movistar';
-
+    protected $signature = 'tv:movistar';
     protected $description = 'Descarga programación Movistar';
-
-    private $movistar;
+    protected $movistar;
 
     public function __construct(Movistar $movistar)
     {
@@ -22,8 +20,7 @@ class MovistarCommand extends Command
 
     public function handle()
     {
-        $this->movistar->setCommand($this);
-        $this->movistar->movies();
-        $this->info('perfecto');
+        $this->movistar->getMovies('artisan');
+        $this->info('Todo actualizado');
     }
 }

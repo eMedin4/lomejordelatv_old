@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Administration;
+namespace App\Library;
 
 use Carbon\Carbon;
 
@@ -73,12 +73,12 @@ class Format
 		return str_replace([':', '.', ','], '',$string);
 	}
 
-	public function checkIfNearly($num1, $num2, $tolerance)
+	public function checkYears($year1, $year2, $tolerance)
 	{
-		if (!$num1 || !$num2) return ['response' => false];
-		if ($num1 == $num2) return ['response' => true, 'diff' => 0];
-		if ($num1 > $num2) $diff = $num1 - $num2;
-		if ($num2 > $num1) $diff = $num2 - $num1;
+		if (!$year1 || !$year2) return ['response' => false];
+		if ($year1 == $year2) return ['response' => true, 'diff' => 0];
+		if ($year1 > $year2) $diff = $year1 - $year2;
+		if ($year2 > $year1) $diff = $year2 - $year1;
 		if ($diff <= $tolerance) return ['response' => true, 'diff' => $diff];
 		return ['response' => false];
 	}
@@ -91,7 +91,12 @@ class Format
 			return ($duration[0] * 60) + $duration[1];
 		}
 		return $duration; //si no existen horas
-		
+	}
+
+	//decodifica carácteres como &rsquo; a sus carácteres normales
+	public function decode($string)
+	{
+		return html_entity_decode($string, ENT_NOQUOTES, 'UTF-8');
 	}
     
 }

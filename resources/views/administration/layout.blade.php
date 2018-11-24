@@ -13,7 +13,7 @@
     <header>
         <div class="wrap">
             <div class="top-bar">
-                <h1 class="title">Panel de Administración</h1>
+                <h1 class="title"><a href="{{route('dashboard')}}">Panel de Administración</a></h1>
                 <ul class="nav-main">
                     <li> {{ Auth::user()->name }}</li>
                     <li> <a href="{{ route('logout') }}">Salir</a> </li>

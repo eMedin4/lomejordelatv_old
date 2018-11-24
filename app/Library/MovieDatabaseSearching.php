@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Administration;
+namespace App\Library;
 
 use App\Models\Movie;
 

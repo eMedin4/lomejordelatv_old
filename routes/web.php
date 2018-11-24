@@ -17,13 +17,13 @@ Route::group([
     Route::get('/', 'Dashboard@show')->name('dashboard');
     Route::get('/clearCustomErrorsLog', 'Dashboard@clearCustomErrorsLog')->name('clearCustomErrorsLog');
     Route::get('/clearCustomMoviesLog', 'Dashboard@clearCustomMoviesLog')->name('clearCustomMoviesLog');
-    Route::get('/filmaffinityalphabetically', 'MovieDatabaseBuilding@filmAffinityAlphabetically')->name('filmaffinityalphabetically');
-    Route::get('/filmaffinityid', 'MovieDatabaseBuilding@filmAffinityId')->name('filmaffinityid');
-    Route::get('/filmaffinitymultipleids', 'MovieDatabaseBuilding@filmAffinityMultipleIds')->name('filmaffinitymultipleids');
-    Route::get('/netflix', 'Netflix@movies')->name('netflix');
-    Route::get('/movistar', 'Movistar@movies')->name('movistar');
+    Route::get('/setfromletter', 'Dashboard@setFromLetter')->name('setFromLetter');
+    Route::get('/setfromfaid', 'Dashboard@setFromFaId')->name('setFromFaId');
+    Route::get('/setfrommultiids', 'Dashboard@setFromMultiIds')->name('setFromMultiIds');
+    Route::get('/netflix', 'Dashboard@netflix')->name('netflix');
+    Route::get('/movistar', 'Dashboard@setMovistar')->name('setMovistar');
     Route::get('/amazon', 'amazonScraper@movies')->name('amazon');
-    Route::get('/stick', 'MovieDatabaseBuilding@stick')->name('stick');
+    Route::get('/testing', 'Dashboard@testing')->name('testing');
 });
 
 /* 

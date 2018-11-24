@@ -18,17 +18,18 @@
   
   .stars > span {
     margin-right: 3px;
+    color: #fe4b64;
   }
   
-  .star-5-color   { color: #01ff2e; }
-  .star-4-color   { color: #ffd600; }
-  .star-3-color   { color: #ffd600; }
-  .star-2-color   { color: #ffd600; }
-  .star-1-color   { color: #ffd600; }
-  .star-4-nocolor,
-  .star-3-nocolor,
-  .star-2-nocolor,
-  .star-1-nocolor { 
+  //.star-5-color   { color: #1fbf4f; }
+  //.star-4-color   { color: #1fbf4f; }
+  //.star-3-color   { color: #1fbf4f; }
+  //.star-2-color   { color: #1fbf4f; }
+  //.star-1-color   { color: #1fbf4f; }
+  .stars .star-4-nocolor,
+  .stars .star-3-nocolor,
+  .stars .star-2-nocolor,
+  .stars .star-1-nocolor { 
     color: #191b22; 
   }
   
@@ -56,18 +57,19 @@
     top: 0px;
     bottom: 0px;
     border-radius: 2px 0 0 2px;
+    background: repeating-linear-gradient(135deg, #1fbf4f, #1fbf4f 2px, #038e36, #038e36 8px);
   }
   
-  .popularity-5 .popularity-inner { background: #FF015B; right: 0%; background: repeating-linear-gradient(135deg, #ff015b, #ff015b 2px, #d62989, #d62989 8px); border-radius: 4px;}
-  .popularity-4 .popularity-inner { background: #D62989; right: 20%; background: repeating-linear-gradient(135deg, #ff015b, #ff015b 2px, #d62989, #d62989 8px);}
-  .popularity-3 .popularity-inner { background: #9B479E; right: 40%; background: repeating-linear-gradient(135deg, #ff015b, #ff015b 2px, #d62989, #d62989 8px);}
-  .popularity-2 .popularity-inner { background: #5D5398; right: 60%; background: repeating-linear-gradient(135deg, #ff015b, #ff015b 2px, #d62989, #d62989 8px);}
-  .popularity-1 .popularity-inner { background: #32527C; right: 80%; background: repeating-linear-gradient(135deg, #ff015b, #ff015b 2px, #d62989, #d62989 8px);}
-  .popularity-0 .popularity-inner { background: #2F4858; right: 90%; background: repeating-linear-gradient(135deg, #ff015b, #ff015b 2px, #d62989, #d62989 8px);}
+  .popularity-5 .popularity-inner { right: 0%; border-radius: 4px;}
+  .popularity-4 .popularity-inner { right: 20%;}
+  .popularity-3 .popularity-inner { right: 40%;}
+  .popularity-2 .popularity-inner { right: 60%;}
+  .popularity-1 .popularity-inner { right: 80%;}
+  .popularity-0 .popularity-inner { right: 90%;}
   
   .country {
     height: 13px;
-    background-image: url(../images/flags.png); 
+    background-image: url("../images/flags.png"); 
     background-repeat: no-repeat;
     position: relative;
     top: 2px;

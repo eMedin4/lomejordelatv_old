@@ -3,18 +3,17 @@ html {
     box-sizing: border-box;
 }
   
+
 *, *:before, *:after {
     box-sizing: inherit;
 }
-  
-  
 
 body {
     font-family: $body-font;
     font-style: normal;
     font-weight: $normal-weight;
     color: $front-color;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 20px;
     background: $background-color;
     letter-spacing: -0.3px;

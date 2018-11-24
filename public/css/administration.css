@@ -26,6 +26,11 @@
       width: 100%;
   }
 
+  a {
+      text-decoration: none;
+      color: inherit;
+  }
+
   /* Main */
 
   body {
@@ -33,13 +38,13 @@
     font-style: normal;
     font-weight: 400;
     color: #2b2c2d;
-    line-height: 24px;
-    background: #f6f6f6;
-    font-size: 14px;
+    line-height: 18px;
+    background: #f7f8f9;
+    font-size: 12px;
 }
 
 h1 {
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .wrap {
@@ -47,11 +52,16 @@ h1 {
     margin: 0 auto;
 }
 
+header {
+    background: #e8edf1;
+}
+
 .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 20px 40px;
+    padding: 5px 18px;
+    margin-bottom: 8px;
 }
 
 .nav-main li {
@@ -63,13 +73,38 @@ h1 {
     flex-wrap: wrap;
 }
 
+.content-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-wrap {
+    flex-basis: 25%;
+}
+
 .card {
     border-radius: 3px;
     box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
     background-color: #fff;
-    padding: 20px 26px;
-    flex-basis: 32.1%;
     margin: 8px;
+    position: relative;
+    padding: 40px 10px;
+}
+
+h1 {
+    font-size: 14px;
+}
+
+h3 {
+    font-size: 14px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    background: #e8edf1;
+    border-radius: 3px 3px 0 0;
+    padding: 5px 10px;
 }
 
 .content-full-width .card {
@@ -90,6 +125,7 @@ input[type="text"],
 textarea {
     font-family: 'Roboto Mono', monospace;
     width: 50%;
+    max-width: 150px;
     border: 1px solid #c5c5c5;
     box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
     margin-right: 8px;
@@ -105,12 +141,17 @@ button {
     font-family: 'Roboto Mono', monospace;
     background-color: #209cee;
     border: none;
-    padding: 6px 20px;
+    padding: 6px 12px;
     box-shadow: 0 2px 5px 0 rgba(88,88,102,.07);
     color: #fff;
     border-radius: 3px;
     display: block;
-    margin-bottom: 10px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d7fbf;
 }
 
 .text-from-file {
@@ -122,6 +163,10 @@ button {
     color: #757575;
     margin-bottom: 12px;
     min-height: 36px;
+}
+
+label {
+    margin: 0 8px 0 4px;
 }
 
 .myCheckbox input {
@@ -159,3 +204,55 @@ small {
     line-height: 15px;
     color: #757575;
 }
+
+.background-tmdb {
+    max-width: 207px;
+}
+
+.poster-tmdb {
+    max-width: 77px;
+}
+
+.message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message span {
+    padding: 5px 14px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    background: #fff1bc;
+}
+
+.card .id {
+    background: #40454a;
+    color: #fff;
+    padding: 0 2px;
+    margin-right: 2px;
+}
+
+.card .title {
+    font-weight: 700;
+    margin-right: 2px;
+}
+
+.card .director {
+    background: #bbffc0;
+    padding: 0 2px;
+    margin-right: 2px;
+}
+
+.card .meta {
+    background: #ffc9c9;
+    padding: 0 2px;
+    margin-right: 2px;
+}
+
+.card-inner {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8edf1;
+    margin-bottom: 10px;    
+}
+
