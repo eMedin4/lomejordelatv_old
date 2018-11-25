@@ -18,7 +18,7 @@
   
   .stars > span {
     margin-right: 3px;
-    color: #fe4b64;
+    color: #ff5b57;
   }
   
   //.star-5-color   { color: #1fbf4f; }
@@ -35,7 +35,7 @@
   
   .popularity-tag {
     font-size: 11px;
-    color: #687590;
+    color: $back-text-color;
     margin-right: 5px;
     position: relative;
     top: -1px;
@@ -58,6 +58,7 @@
     bottom: 0px;
     border-radius: 2px 0 0 2px;
     background: repeating-linear-gradient(135deg, #1fbf4f, #1fbf4f 2px, #038e36, #038e36 8px);
+    background: #ff5b57;
   }
   
   .popularity-5 .popularity-inner { right: 0%; border-radius: 4px;}
@@ -201,12 +202,11 @@
    }
    
    .program {
-    color: #d9e1e8;
-    font-weight: 500;
+    padding: 13px 15px 15px;
     font-size: 14px;
-    padding: 10px 15px;
-    margin-top: 10px;
-    border-top: 1px solid #303643;
+    font-weight: $semibold-weight;
+    text-transform: uppercase;
+    color: $program-color;
    }
   
    .program .channel {
@@ -219,12 +219,12 @@
    }
   
    .program .icon-tv {
-    font-size: 16px;
+    font-size: 14px;
     padding-right: 4px;
    }
   
    .program .icon-clock {
-    font-size: 16px;
+    font-size: 14px;
     position: relative;
     top: 1px;
     padding-right: 4px;

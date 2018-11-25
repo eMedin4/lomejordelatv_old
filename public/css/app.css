@@ -359,10 +359,10 @@ body {
   font-family: "Roboto", sans-serif;
   font-style: normal;
   font-weight: 400;
-  color: #cad7e1;
+  color: #fafafa;
   font-size: 16px;
   line-height: 20px;
-  background: #191b22;
+  background: #202124;
   letter-spacing: -0.3px;
 }
 
@@ -383,47 +383,43 @@ img {
 
 h1, .h1 {
   font-size: 60px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 66px;
   letter-spacing: -2px;
   padding: 15px 15px 12px;
   margin-left: -3px;
-  color: #eaeff3;
+  color: #fff;
 }
 
 h2, .h2 {
-  font-size: 42px;
-  font-weight: 700;
-  line-height: 44px;
-  letter-spacing: -1px;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 32px;
   padding: 15px 15px 12px;
-  margin-left: -2px;
-  color: #eaeff3;
+  margin-left: -1px;
+  color: #fff;
 }
 
 h3, .h3 {
   font-size: 26px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 30px;
-  letter-spacing: -.5px;
-  margin-left: -1px;
   padding: 15px 15px 12px;
-  color: #eaeff3;
+  color: #fff;
 }
 
 h4, .h4 {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 22px;
-  letter-spacing: -.3px;
   padding: 15px 15px 8px;
-  color: #eaeff3;
+  color: #fff;
 }
 
 h5, .h5 {
   font-size: 15px;
   font-weight: 400;
-  color: #eaeff3;
+  color: #fff;
   padding: 15px 15px 6px;
 }
 
@@ -582,7 +578,7 @@ Icomoon
 }
 
 .card-inner {
-  background: #282c37;
+  background: #2b2d31;
   border-radius: 4px;
 }
 
@@ -609,7 +605,7 @@ Icomoon
 
 .stars > span {
   margin-right: 3px;
-  color: #fe4b64;
+  color: #ff5b57;
 }
 
 .stars .star-4-nocolor,
@@ -621,7 +617,7 @@ Icomoon
 
 .popularity-tag {
   font-size: 11px;
-  color: #687590;
+  color: #5f6368;
   margin-right: 5px;
   position: relative;
   top: -1px;
@@ -644,6 +640,7 @@ Icomoon
   bottom: 0px;
   border-radius: 2px 0 0 2px;
   background: repeating-linear-gradient(135deg, #1fbf4f, #1fbf4f 2px, #038e36, #038e36 8px);
+  background: #ff5b57;
 }
 
 .popularity-5 .popularity-inner {
@@ -1184,12 +1181,11 @@ Icomoon
 }
 
 .program {
-  color: #d9e1e8;
-  font-weight: 500;
+  padding: 13px 15px 15px;
   font-size: 14px;
-  padding: 10px 15px;
-  margin-top: 10px;
-  border-top: 1px solid #303643;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #a8acb3;
 }
 
 .program .channel {
@@ -1202,12 +1198,12 @@ Icomoon
 }
 
 .program .icon-tv {
-  font-size: 16px;
+  font-size: 14px;
   padding-right: 4px;
 }
 
 .program .icon-clock {
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   top: 1px;
   padding-right: 4px;

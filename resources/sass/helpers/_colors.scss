@@ -15,17 +15,21 @@ $white: #fff;
 
 
 $base-color: #282c37;
-$background-color: shade($base-color, 38);
-$primary-card-color: $base-color;
+//$background-color: shade($base-color, 38);
+$background-color: #202124;
+//$primary-card-color: $base-color;
+$primary-card-color: #2b2d31;
 $secondary-card-color: shade($base-color, 4);
 $primary-card-break-color: tint($base-color, 4);
 $secondary-card-break-color: shade($base-color, 8);
 
-$front-color: adjust-hue(saturate(tint($base-color, 80), 25), -15deg);
-$heading-color: tint($front-color, 60);
+//$front-color: adjust-hue(saturate(tint($base-color, 80), 25), -15deg);
+$front-color: #fafafa;
+//$heading-color: tint($front-color, 60);
+$heading-color: #fff;
 $text-color: $front-color;
-$program-color: tint($front-color, 10);
-$tag-color: shade($front-color, 10);
+$back-text-color: #5f6368;
+$program-color: #a8acb3;
 
 $logo-color: $white;
 $title-color: $white;
