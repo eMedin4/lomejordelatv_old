@@ -9,7 +9,7 @@
     <section class="info">
         
         <ul class="meta">
-            <li class="country country-{{ $record->movie->country }}"></li>
+            <li class="country country-{{ str_slug($record->movie->country) }}"></li>
             <li class="year">{{ $record->movie->year }}</li>
             <li class="stars">{!! $record->movie->fa_stars !!}</li>
             <li class="popularity-tag">popular</li>

@@ -598,13 +598,12 @@ Icomoon
 
 .stars {
   font-size: 14px;
-  margin: 0 16px;
+  margin: 0 8px;
   position: relative;
   top: 0;
 }
 
 .stars > span {
-  margin-right: 3px;
   color: #ff5b57;
 }
 
@@ -612,12 +611,36 @@ Icomoon
 .stars .star-3-nocolor,
 .stars .star-2-nocolor,
 .stars .star-1-nocolor {
-  color: #191b22;
+  color: #202124 !important;
+}
+
+.star-large {
+  font-size: 16px;
+}
+
+.stars span:nth-child(0) {
+  color: #01579B;
+}
+
+.stars span:nth-child(1) {
+  color: #0277BD;
+}
+
+.stars span:nth-child(2) {
+  color: #0288D1;
+}
+
+.stars span:nth-child(3) {
+  color: #039BE5;
+}
+
+.stars span:nth-child(4) {
+  color: #03A9F4;
 }
 
 .popularity-tag {
   font-size: 11px;
-  color: #5f6368;
+  color: #565d67;
   margin-right: 5px;
   position: relative;
   top: -1px;
@@ -627,8 +650,8 @@ Icomoon
 .popularity {
   position: relative;
   top: -3px;
-  background: #191b22;
-  width: 84px;
+  background: #202124;
+  width: 60px;
   height: 4px;
   border-radius: 2px;
 }
@@ -639,8 +662,10 @@ Icomoon
   top: 0px;
   bottom: 0px;
   border-radius: 2px 0 0 2px;
-  background: repeating-linear-gradient(135deg, #1fbf4f, #1fbf4f 2px, #038e36, #038e36 8px);
-  background: #ff5b57;
+  background: repeating-linear-gradient(135deg, #01579B, #01579B 2px, #0277BD, #0277BD 8px);
+  background: #FFBB00;
+  background: -webkit-gradient(linear, left top, right top, from(#2b2d30), to(#00abfb));
+  background: linear-gradient(to right, #2b2d30 0%, #00abfb 100%);
 }
 
 .popularity-5 .popularity-inner {
@@ -1177,11 +1202,11 @@ Icomoon
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-  padding: 8px 15px 0;
+  padding: 7px 15px 0;
 }
 
 .program {
-  padding: 13px 15px 15px;
+  padding: 9px 15px 15px;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;

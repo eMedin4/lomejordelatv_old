@@ -27,7 +27,7 @@ class Netflix
     public function getMovies($source)
     {
 
-        $response = Request::get("https://unogs-unogs-v1.p.mashape.com/aaapi.cgi?q=-!1900,2018-!0,5-!0,10-!0-!Movie-!Any-!Any-!gt0-!&t=ns&cl=270&st=adv&ob=Relevance&p=1&sa=and",
+        $response = Request::get("https://unogs-unogs-v1.p.mashape.com/aaapi.cgi?q=-!1900,2018-!0,5-!0,10-!0-!Movie-!Any-!Any-!gt0-!&t=ns&cl=270&st=adv&ob=Relevance&p=8&sa=and",
             array(
                 "X-Mashape-Key" => env('UNOGS_KEY'),
                 "X-Mashape-Host" => env('UNOGS_HOST')
