@@ -30,7 +30,7 @@
             <div class="header-wrap-right">
                 <nav class="side-menu">
                     <a class="search-btn" href="">Buscar</a>
-                    <a class="user-btn" href="">Entra con tu usuario</a>
+                    <a class="user-btn" href="">Tu usuario</a>
                 </nav>
             </div>
 		</div>

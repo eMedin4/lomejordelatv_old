@@ -477,18 +477,9 @@ Icomoon
   color: #d9e1e8;
 }
 
-.main-menu .search-btn,
-.side-menu .search-btn {
-  color: #a2a5ad;
-  font-weight: 400;
-  letter-spacing: 0px;
-}
-
 .main-menu .user-btn,
 .side-menu .user-btn {
-  color: #faa240;
-  font-weight: 400;
-  letter-spacing: 0px;
+  color: #a2b3f6;
 }
 
 .main-menu a,
@@ -550,7 +541,7 @@ Icomoon
 }
 
 .header {
-  padding: 24px 0 0;
+  padding: 25px 0;
 }
 
 .header-wrap {
@@ -599,8 +590,7 @@ Icomoon
 }
 
 .headline .headline-content {
-  margin: 15px 30px 0px;
-  padding: 25px 16px 15px;
+  padding: 25px 30px 15px;
   border-radius: 3px;
 }
 
@@ -619,6 +609,41 @@ Icomoon
   display: inline-block;
   margin-left: 12px;
   font-weight: 300;
+}
+
+.ad {
+  background: #537bf3;
+  text-align: center;
+  border-radius: 4px;
+  padding: 120px 0;
+  background-image: url(../images/funky-lines.png);
+  background-color: #333;
+  color: #a8aab1;
+  font-weight: 500;
+  font-size: 23px;
+  position: relative;
+}
+
+.ad span {
+  position: relative;
+  z-index: 9999;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: 'Roboto Slab', serif;
+}
+
+.ad:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(3, 60, 232, 0.39);
+  -webkit-transition: all .3s linear;
+  transition: all .3s linear;
+  z-index: 8888;
 }
 
 .card {

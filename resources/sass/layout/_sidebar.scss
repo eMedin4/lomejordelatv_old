@@ -1,0 +1,31 @@
+.ad {
+    background: #537bf3;
+    text-align: center;
+    border-radius: 4px;
+    padding: 120px 0;
+    background-image: url(../images/funky-lines.png);
+    background-color: #333;
+    color: #a8aab1;
+    font-weight: 500;
+    font-size: 23px;
+    position: relative;
+    span {
+        position: relative;
+        z-index: 9999;
+        font-weight: 600;
+        color: #ffffff;
+        font-family: 'Roboto Slab', serif;
+    }
+    &:before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(3, 60, 232, 0.39);
+        transition: all .3s linear;
+        z-index: 8888;
+    }
+}
