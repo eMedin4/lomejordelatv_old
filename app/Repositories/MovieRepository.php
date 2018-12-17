@@ -8,6 +8,7 @@ use App\Models\Movie;
 use App\Models\Param;
 use App\Models\User;
 use App\Models\MovistarTime;
+use App\Models\Netflix;
 
 use Carbon\Carbon;
 
@@ -25,6 +26,12 @@ class MovieRepository {
     public function getMovie($slug)
     {
         return Movie::where('slug', $slug)->with(['movistarTime', 'movistarHistory'])->first();
+    }
+
+    public function getNetflix()
+    {
+        $records = Netflix::with('movie')->take(50)->get();
+        return $records;
     }
 
 

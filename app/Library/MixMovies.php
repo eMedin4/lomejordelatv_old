@@ -24,7 +24,7 @@ class MixMovies
 
 		ini_set('memory_limit', '-1');
         set_time_limit(28800);
-        $this->themoviedb->updateAllGenres();
+        $this->themoviedb->updateAllMovieGenres();
 	}
 
 	public function setFromFaId( $source, $faid )
@@ -41,7 +41,7 @@ class MixMovies
 		$this->output->message("Entramos en $url", false, $source);
 
 		//datos de filmaffinity
-		$faData = $this->filmaffinity->getMovie($crawler);
+		$faData = $this->filmaffinity->getMovie($crawler, $minDuration = 0); //force: fuerza a descargar aunque duracion sea inferior a 30
 
 		if ($faData['response'] == false) {
 			$this->output->message($faData['message'], $faData['revision'], $source);
@@ -61,7 +61,7 @@ class MixMovies
 		$this->output->message("Datos de Themoviedb ok: " . $faData['fa_title'], false, $source);
 
 		$fullData = array_merge($faData, $tmData);
-		$store = $this->repository->storeMovie($fullData, $source);
+		$store = $this->repository->storeItem($fullData, $source, 'movie');
 		if ($store['status'] == 'updated') {
 			$this->output->message("Actualizada en base de datos con id " . $store['id'], false, $source);
 			return $store;
@@ -91,7 +91,7 @@ class MixMovies
         for ($i=1; $i<=$totalPages; $i++) {
 
 			$crawler->filter('.movie-card')->each(function($element) use($client, $source) {
-				$this->processCard($element, $client, $source, $minVotes = 10);
+				$this->processCard($element, $client, $source, 10, 30);
 			});
 
 			//Avanzamos página
@@ -122,7 +122,7 @@ class MixMovies
 			$this->output->message("Entramos en " . $client->getRequest()->getUri(), false, $source);
 
 			$crawler->filter('.movie-card')->each(function($element) use($client, $source) {
-				$this->processCard($element, $client, $source, $style = 'alternative');
+				$this->processCard($element, $client, $source, 0, 0, $style = 'alternative');
 			});
 
 			$upPage = $crawler->filter('.prev-date-cat')->parents()->link();
@@ -145,12 +145,12 @@ class MixMovies
 		$this->output->message($client->getRequest()->getUri() . " : Entramos en la url.", false, $source);
 
 		$crawler->filter('.movie-card')->each(function($element) use($client, $source) {
-			$this->processCard($element, $client, $source, $style = 'alternative');
+			$this->processCard($element, $client, $source, 0, 0, $style = 'alternative');
 		});
 	}
 
 
-	public function processCard($element, $client, $source, $minVotes = 0, $style = 'starndard')
+	public function processCard($element, $client, $source, $minVotes = 0, $minDuration = 0, $style = 'standard')
 	{
 		//Scrapeamos movie card
 		$card = $this->filmaffinity->getCard($element, $style);
@@ -165,7 +165,7 @@ class MixMovies
 		if (in_array($card['fa_id'], config('movies.unavailable'))) return;
 			
 		//Comprobamos si ya existe en nuestra db
-		if ($this->repository->checkIfExist($card['fa_id'])) {
+		if ($this->repository->checkIfMovieExist($card['fa_id'])) {
 			$this->repository->update($card);
 			$this->output->message( $card['fa_title'] . " : Ya existe, la actualizamos", false, $source);
 			return;
@@ -176,7 +176,7 @@ class MixMovies
 		$this->output->message($card['fa_title'] . " : Entramos en la pagina de filmaffinity", false, $source);
 				
 		//Scrapeamos
-		$faData = $this->filmaffinity->getMovie($crawler);
+		$faData = $this->filmaffinity->getMovie($crawler, $minDuration);
 
 		if ($faData['response'] == false) {
 			$this->output->message($faData['message'], $faData['revision'], $source);
@@ -190,7 +190,7 @@ class MixMovies
 			} else {
 				$this->output->message($faData['fa_title'] . " : Datos de Themoviedb ok", false, $source);
 				$fullData = array_merge($faData, $tmData);
-				$this->repository->storeMovie($fullData, $source);
+				$this->repository->storeItem($fullData, $source, 'movie');
 				$this->output->message($fullData['fa_title'] . " : Guardada ok en base de datos", false, $source);
 			}
 		}

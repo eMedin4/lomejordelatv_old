@@ -363,7 +363,6 @@ body {
   font-size: 16px;
   line-height: 20px;
   background: #202124;
-  letter-spacing: -0.3px;
 }
 
 .main-wrap {
@@ -381,12 +380,16 @@ img {
   margin: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
 h1, .h1 {
   font-size: 60px;
   font-weight: 400;
   line-height: 66px;
   letter-spacing: -2px;
-  padding: 15px 15px 12px;
+  padding: 0 15px 12px;
   margin-left: -3px;
   color: #fff;
 }
@@ -394,25 +397,25 @@ h1, .h1 {
 h2, .h2 {
   font-size: 32px;
   font-weight: 400;
-  line-height: 32px;
-  padding: 15px 15px 12px;
+  line-height: 36px;
+  padding: 0 15px 10px;
   margin-left: -1px;
   color: #fff;
 }
 
 h3, .h3 {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 400;
   line-height: 30px;
-  padding: 15px 15px 12px;
+  padding: 0 15px 8px;
   color: #fff;
 }
 
 h4, .h4 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
   line-height: 22px;
-  padding: 15px 15px 8px;
+  padding: 0 15px 8px;
   color: #fff;
 }
 
@@ -420,7 +423,7 @@ h5, .h5 {
   font-size: 15px;
   font-weight: 400;
   color: #fff;
-  padding: 15px 15px 6px;
+  padding: 0 15px 6px;
 }
 
 /* 
@@ -462,18 +465,34 @@ Icomoon
   content: "\E95B";
 }
 
-.main-menu {
+.main-menu,
+.side-menu {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   font-size: 16px;
   letter-spacing: 1px;
   font-weight: 500;
-  margin: 8px 0 0 5px;
+  margin: 6px 0 0 5px;
   color: #d9e1e8;
 }
 
-.main-menu a {
+.main-menu .search-btn,
+.side-menu .search-btn {
+  color: #a2a5ad;
+  font-weight: 400;
+  letter-spacing: 0px;
+}
+
+.main-menu .user-btn,
+.side-menu .user-btn {
+  color: #faa240;
+  font-weight: 400;
+  letter-spacing: 0px;
+}
+
+.main-menu a,
+.side-menu a {
   text-align: center;
   margin-left: 20px;
   padding-left: 20px;
@@ -486,6 +505,15 @@ Icomoon
   padding-left: 0;
 }
 
+.type-link {
+  display: block;
+  padding: 6px 0px;
+  border-radius: 3px;
+  color: #d9e1e8;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
 .main-layout {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -496,6 +524,14 @@ Icomoon
 .col-2,
 .col-3 {
   padding: 10px;
+}
+
+.col-3 {
+  padding-left: 30px;
+}
+
+.main {
+  background: radial-gradient(at top, #2b2d31, #202124, #202124);
 }
 
 .main-layout .col-1 {
@@ -514,7 +550,7 @@ Icomoon
 }
 
 .header {
-  padding: 24px 0 20px;
+  padding: 24px 0 0;
 }
 
 .header-wrap {
@@ -524,7 +560,19 @@ Icomoon
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding: 0 40px;
+}
+
+.header-wrap-left {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .title {
@@ -532,22 +580,45 @@ Icomoon
 }
 
 .title .icon-tv {
-  font-size: 32px;
-  color: #3c99dc;
+  font-size: 20px;
+  color: #fff;
   -webkit-transform: rotate(10deg);
           transform: rotate(10deg);
   display: inline-block;
-  padding-right: 10px;
 }
 
 .title p {
   display: inline-block;
   text-align: center;
-  line-height: 34px;
+  line-height: 38px;
   font-weight: 900;
   color: #fff;
-  font-size: 30px;
-  letter-spacing: 1px;
+  font-size: 22px;
+  font-family: 'Roboto Slab', serif;
+  letter-spacing: .5px;
+}
+
+.headline .headline-content {
+  margin: 15px 30px 0px;
+  padding: 25px 16px 15px;
+  border-radius: 3px;
+}
+
+.headline h1 {
+  display: inline-block;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 25px;
+  letter-spacing: 0px;
+  padding: 0;
+  margin: 0;
+}
+
+.headline p {
+  color: #a2a5ad;
+  display: inline-block;
+  margin-left: 12px;
+  font-weight: 300;
 }
 
 .card {
@@ -587,9 +658,11 @@ Icomoon
 }
 
 .meta {
-  font-weight: 500;
+  font-weight: 400;
   font-size: 14px;
   padding: 0 15px;
+  position: relative;
+  top: -12px;
 }
 
 .meta li {
@@ -597,14 +670,16 @@ Icomoon
 }
 
 .stars {
-  font-size: 14px;
-  margin: 0 8px;
+  font-size: 13px;
+  margin: 0 12px 0 15px;
   position: relative;
-  top: 0;
+  top: 0px;
+  display: none !important;
 }
 
 .stars > span {
-  color: #ff5b57;
+  color: #ffcb31;
+  margin-right: 2px;
 }
 
 .stars .star-4-nocolor,
@@ -614,30 +689,33 @@ Icomoon
   color: #202124 !important;
 }
 
-.star-large {
-  font-size: 16px;
+.stars .star-1-color {
+  color: #00e2fc;
 }
 
-.stars span:nth-child(0) {
-  color: #01579B;
+.stars .star-2-color {
+  color: #16ebd7;
 }
 
-.stars span:nth-child(1) {
-  color: #0277BD;
+.stars .star-3-color {
+  color: #32f4b2;
 }
 
-.stars span:nth-child(2) {
-  color: #0288D1;
+.stars .star-4-color {
+  color: #4eff87;
 }
 
-.stars span:nth-child(3) {
-  color: #039BE5;
+.stars .star-5-color {
+  color: #4fff88;
 }
 
-.stars span:nth-child(4) {
-  color: #03A9F4;
-}
-
+/*
+  .stars span:nth-child(0) { color: #01579B; }
+  .stars span:nth-child(1) { color: #0277BD; }
+  .stars span:nth-child(2) { color: #0288D1; }
+  .stars span:nth-child(3) { color: #039BE5; }
+  .stars span:nth-child(4) { color: #03A9F4; }
+*/
 .popularity-tag {
   font-size: 11px;
   color: #565d67;
@@ -1198,24 +1276,53 @@ Icomoon
   margin-left: 4px;
 }
 
+.popularity-tag-hot,
+.popularity-tag-warm {
+  padding: 2px 3px 0 2px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-size: 11px;
+  line-height: 12px;
+  position: relative;
+  top: -1px;
+  letter-spacing: 0px;
+  font-weight: 500;
+}
+
+.popularity-tag-hot {
+  background: #f4035a;
+  color: #f8ffff;
+}
+
+.popularity-tag-warm {
+  color: #fff;
+  background: #ff0b42bb;
+  border-radius: 3px;
+  padding: 5px 9px 3px;
+}
+
+.info {
+  padding-bottom: 15px;
+}
+
 .info p {
-  font-weight: 400;
+  font-weight: 300;
   font-size: 16px;
   line-height: 24px;
-  padding: 7px 15px 0;
+  padding: 8px 15px 0;
 }
 
 .program {
-  padding: 9px 15px 15px;
+  padding: 15px 15px 12px;
   font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
+  text-align: right;
   color: #a8acb3;
+  display: none;
 }
 
 .program .channel {
   display: inline-block;
-  padding-right: 12px;
+  padding-right: 2px;
 }
 
 .program time {
@@ -1352,6 +1459,34 @@ Icomoon
 
 .channel.parch {
   color: #023e84;
+}
+
+.icon-star-full {
+  color: #ffdc50;
+}
+
+.score {
+  background: #202124;
+  border-radius: 3px;
+  padding: 3px 8px 1px;
+  margin-right: 6px;
+  font-size: 13px;
+}
+
+.score-rank {
+  color: #fff;
+  font-weight: 600;
+  padding-left: 7px;
+  font-family: "Roboto", sans-serif;
+}
+
+.year {
+  background: #33353a;
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 16px;
+  margin-right: 7px;
+  padding: 5px 9px 3px;
 }
 
 .develop-data {

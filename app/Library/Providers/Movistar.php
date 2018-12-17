@@ -1,8 +1,5 @@
 <?php
-
 namespace App\Library\Providers;
-
-use App\Http\Controllers\Controller;
 
 use Goutte\Client;
 use Carbon\Carbon;
@@ -10,13 +7,11 @@ use App\Library\Repository;
 use App\Library\Output;
 use App\Models\MovistarLog;
 
-
 class Movistar
 {
 
     private $repository;
     private $output;
-    
 
     public function __Construct(Repository $repository, Output $output)
 	{
@@ -38,7 +33,6 @@ class Movistar
             return;
         }
 
-
         foreach ($daysToScrap as $dayToScrap) {
             $this->output->message("Descargando fecha $dayToScrap", false, $source);
             foreach (config('movies.channels') as $channelCode => $channel) {
@@ -58,12 +52,10 @@ class Movistar
 
     public function scrapPage($client, $crawler, $date, $channelCode, $channel)
     {
-        //RECORREMOS FILAS
-		$crawler->filter('.container_box.g_CN')->each(function($node, $i) use($client, $date, $channelCode, $channel) {
+        //RECORREMOS FILAS DE CINE O SERIES
+		$crawler->filter('.container_box.g_CN, .container_box.g_SR')->each(function($node, $i) use($client, $date, $channelCode, $channel) {
             
-            //SI NO ES CINE DESCARTAMOS
-            if ($node->filter('li.genre')->text() != 'Cine') return;
-
+            $type = $node->filter('li.genre')->text();
             $title = trim($node->filter('li.title')->text());
             $time = $node->filter('li.time')->text();
             $datetime = $this->movistarDate($time, $date);
@@ -84,6 +76,17 @@ class Movistar
             
             //BORRAMOS PALABRAS BANEADAS DEL TITULO
             $title = str_replace(config('movies.wordsTvBan'), '', $title);
+
+            //LIMPIAMOS TÍTULOS DE SERIES
+            if ($type == 'Series') {
+                //Principal sospechoso 1973 (T1): Episodio 5
+                preg_match('#(T(.*?)):#', $title, $season);
+                $title = trim(substr($title, 0, strrpos($title, "(T")));
+            }
+
+            dd($title, $season);
+
+            dd($type, $title);
             
             //BUSCAMOS 1 COINCIDENCIA POR TITULO EXACTO
             $movie = $this->repository->searchByExactTitle($title);

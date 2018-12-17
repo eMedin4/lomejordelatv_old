@@ -13,7 +13,7 @@ class Output
 		$this->console = $console;
 	}
     
-    public function message($message, $log, $source, $breakLine = true)
+    public function message($message, $log, $source = 'artisan', $breakLine = true)
     {
         if ($log) $this->writeLog($message);
         if ($source == 'browse') $this->writeBrowse($message, $breakLine);

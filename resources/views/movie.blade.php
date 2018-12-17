@@ -6,14 +6,14 @@
 
 		<div class="col-1">
             <div class="movie-aside-card">
-                <img src="{{ asset('/movimages/posters/std/' . $record->slug . '.jpg') }}" alt="">
+                <img src="https://s3.eu-west-3.amazonaws.com/lomejordelatv/movieimages/posters/lrg/{{ $record->slug }}.jpg" alt="">
             </div>
 		</div>
 
 		<div class="col-2">
             <article class="movie-main-card">
                 <div class="thumb">
-                    <img src="{{ asset('/movimages/backgrounds/std/' . $record->slug . '.jpg') }}" alt="">
+                    <img src="https://s3.eu-west-3.amazonaws.com/lomejordelatv/movieimages/backgrounds/lrg/{{ $record->slug }}.jpg" alt="">
                     <div class="darker"></div>
                 </div>
                 <div class="info">

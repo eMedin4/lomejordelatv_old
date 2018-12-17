@@ -40,7 +40,7 @@ class Images
 			$this->output->message('Background guardado ok: ' . $slug, false, $source);
 			return true;
 		} catch (\Exception $e) {
-			$this->output->message('Error en Image->saveBackground: ' . $slug, true, $source);
+			$this->output->message('Error en Image->saveBackground: ' . $slug, false, $source);
 			return false;
 		}
 	}

@@ -3,7 +3,7 @@
 Route::get('/temporal', 'TemporalRepository@temporal3');
 
 Route::get('/', 'MovieController@tv')->name('tv');
-Route::get('/netflix', ['as' => 'netflix', 'uses' => 'MovieController@netflix']);
+Route::get('/netflix', 'MovieController@netflix')->name('netflix');
 Route::get('/pelicula/{slug}', 'MovieController@show')->name('movie');
 
 

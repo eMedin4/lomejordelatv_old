@@ -15,14 +15,15 @@ class FilmAffinity
 		$this->algorithm = $algorithm;
 	}
 
-    public function getMovie($crawler)
+    public function getMovie($crawler, $minDuration = 0)
     {
 		// Responde array con keys: response, revision(?), message(?), fa_title(?), fa_original(?),...
 
         //Scrapeamos película
 		$faData['fa_id'] = $this->format->faId($crawler->filter('.ntabs a')->eq(0)->attr('href'));
 		$faData['fa_title'] = $crawler->filter('#main-title span')->text();
-		$faData['fa_title'] = $this->format->removeString($faData['fa_title'], '(TV)');
+		$faData['fa_type'] = strpos($faData['fa_title'], 'erie de TV)') ? 'show' : 'movie';
+		$faData['fa_title'] = $this->format->removeString($faData['fa_title'], ['(TV)', '(Serie de TV)', '(Miniserie de TV)']);
 
 		//Construimos array con los datos de la table(no tienen ids)
         $table = $crawler->filter('.movie-info dt')->each(function($element) { return [$element->text() => $element->nextAll()->text()]; });
@@ -32,7 +33,7 @@ class FilmAffinity
 
         //Datos de la tabla de fa
 		$faData['fa_original'] = $this->format->removeString($this->format->cleanData($this->format->getValueIfExist($table2, 'Título original')), 'aka');
-		$faData['fa_original'] = $this->format->removeString($faData['fa_original'], '(TV)');
+		$faData['fa_original'] = $this->format->removeString($faData['fa_original'], ['(TV)', '(TV Series)']);
 		$faData['fa_year'] = $this->format->getValueIfExist($table2, 'Año');
 		$faData['fa_duration'] = $this->format->integer($this->format->getValueIfExist($table2, 'Duración'));
 		$faData['fa_country'] = $this->format->cleanData($this->format->getValueIfExist($table2, 'País'));
@@ -40,7 +41,7 @@ class FilmAffinity
 		$faData['fa_director'] = $this->format->cleanData($this->format->getValueIfExist($table2, 'Dirección'));
 
 		//Rechazadas
-		if (($faData['fa_duration'] != 0) && ($faData['fa_duration'] < 30)) {
+		if (($faData['fa_duration'] != 0) && ($faData['fa_duration'] < $minDuration)) {
 			$faData['response'] = false;
 			$faData['revision'] = false;
 			$faData['message'] = $faData['fa_title'] . ' : Rechazada: Duración inferior a 30 minutos';

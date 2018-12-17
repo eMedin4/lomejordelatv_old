@@ -1,36 +1,65 @@
 .header {
-    padding: 24px 0 20px;
+    padding: 24px 0 0;
 }
 
 .header-wrap {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 40px;
+}
+
+.header-wrap-left {
+    display: flex;
+    align-items: center;
 }
 
 .title {
     margin: 0 41px 0 10px;
 
     .icon-tv {
-        font-size: 32px;
-        color: #3c99dc;
+        font-size: 20px;
+        color: #fff;
         transform: rotate(10deg);
         display: inline-block;
-        padding-right: 10px;
     }
 
     p {
         display: inline-block;
         text-align: center;
-        line-height: 34px;
+        line-height: 38px;
         font-weight: 900;
-        color: $white;
-        font-size: 30px;
-        letter-spacing: 1px;
+        color: #fff;
+        font-size: 22px;
+        font-family: 'Roboto Slab', serif;
+        letter-spacing: .5px;
     }
-
-  }
+}
   
+.headline {
+    .headline-content {
+        margin: 15px 30px 0px;
+        padding: 25px 16px 15px;
+        border-radius: 3px;
+    }
+    h1 {
+        display: inline-block;
+        font-size: 16px;
+        font-weight: 300;
+        line-height: 25px;
+        letter-spacing: 0px;
+        padding: 0;
+        margin: 0;
+    }
+    p {
+        color: #a2a5ad;
+        display: inline-block;
+        margin-left: 12px;
+        font-weight: 300;
+    }
+}
+
+
   
   
   

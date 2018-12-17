@@ -43,7 +43,7 @@ class Testing
         if ($client->getResponse()->getStatus() !== 200) {
             return ['response' => false, 'message' => 'No se encuentra la url de filmaffinity'];
         }
-        $faData = $this->filmaffinity->getMovie($crawler);
+        $faData = $this->filmaffinity->getMovie($crawler, $minDuration = 0);
 
         if ($faData['response'] == true) {
             //como no deja enlazar la imagen de fa la descargamos en un directorio temporal

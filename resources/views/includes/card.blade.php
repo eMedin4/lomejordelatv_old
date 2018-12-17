@@ -3,28 +3,33 @@
         @if ($thumb)
             <img src="https://s3.eu-west-3.amazonaws.com/lomejordelatv/movieimages/backgrounds/sml/{{ $record->movie->slug }}.jpg" alt="">
         @endif
+        <ul class="meta">
+            <li class="country country-{{ str_slug($record->movie->country) }}"></li>
+            <li class="year">{{ $record->movie->year }}</li>
+            <li class="stars">{!! $record->movie->fa_stars !!}</li>
+            @if ($record->movie->score)
+                <li class="score"><span class="icon-star-full"><span class="score-rank">{{ $record->movie->score}}/10</span></li>
+            @endif
+            @if ($record->movie->fa_popularity_class > 2) <li class="popularity-tag-hot">top</li>
+            @elseif ($record->movie->fa_popularity_class = 2) <li class="popularity-tag-warm">HOT</li>
+            @endif
+        </ul>
         <{{ $heading }}>{{ $record->movie->title }}</{{ $heading }}>
     </a>
     
     <section class="info">
         
-        <ul class="meta">
-            <li class="country country-{{ str_slug($record->movie->country) }}"></li>
-            <li class="year">{{ $record->movie->year }}</li>
-            <li class="stars">{!! $record->movie->fa_stars !!}</li>
-            <li class="popularity-tag">popular</li>
-            <li class="popularity popularity-{{ $record->movie->fa_popularity_class }}"><span class="popularity-inner"></span></li>
-        </ul>
+        
         @if ($excerpt)
             <p class="excerpt">{{ $record->movie->excerpt200 }}</p>
         @endif
 
         <div class="program">
-            <div class="channel"><span class="icon-tv"></span> {{ $record->channel }}</div>
-            <time><span class="icon-clock"></span> {!! $record->format_time !!}</time>
+            <div class="channel"> {{ $record->channel }},</div>
+            <time> {!! $record->format_time !!}</time>
         </div>
 
-        {{-- @include('includes.develop-data') --}}
+        @include('includes.develop-data')
 
     </section>
 </div>

@@ -15,11 +15,19 @@ class Format
 		return $value;
     }
     
-    //ELIMINA STRING SOLO AL FINAL DE UNA CADENA DE TEXTO VALUE
-	public function removeString($value, $string)
+    //ELIMINA REMOVE SOLO AL FINAL DE UNA CADENA DE TEXTO VALUE. REMOVE PUEDE SER UN STRING O UN ARRAY
+	public function removeString($value, $remove)
 	{
-		$string = preg_quote($string); //escapa los carácteres especiales para que preg_replace los reconozca
-		return trim(preg_replace('/' . $string . '$/', '', $value));
+		if (is_array($remove)) {
+			$items = [];
+			foreach ($remove as $item) {
+				$items[] = '/' . preg_quote($item) . '$/';
+			}
+		} else {
+			$items = '/' . preg_quote($remove) . '$/'; //escapa los carácteres especiales para que preg_replace los reconozca
+		}
+		
+		return trim(preg_replace($items, '', $value));
     }
     
     // DEVUELVE EL TEXTO SI EXISTE LA CLASE CSS O EL DEFAULT SI NO

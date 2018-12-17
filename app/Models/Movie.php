@@ -68,17 +68,17 @@ class Movie extends Model
             case ($value >= 5): return '
 				<span class="icon-star-full star-3-color"></span>
 				<span class="icon-star-full star-3-color"></span>
-				<span class="icon-star-full star-3-color star-large"></span>
+				<span class="icon-star-full star-3-color"></span>
 				<span class="icon-star-full star-3-nocolor"></span>
 				<span class="icon-star-full star-3-nocolor"></span>';
             case ($value >= 4): return '
 				<span class="icon-star-full star-2-color"></span>
-				<span class="icon-star-full star-2-color star-large"></span>
+				<span class="icon-star-full star-2-color"></span>
 				<span class="icon-star-full star-2-nocolor"></span>
 				<span class="icon-star-full star-2-nocolor"></span>
 				<span class="icon-star-full star-2-nocolor"></span>';
             default: return '
-				<span class="icon-star-full star-1-color star-large"></span>
+				<span class="icon-star-full star-1-color"></span>
 				<span class="icon-star-full star-1-nocolor"></span>
 				<span class="icon-star-full star-1-nocolor"></span>
 				<span class="icon-star-full star-1-nocolor"></span>
@@ -99,6 +99,12 @@ class Movie extends Model
 	public function getExcerpt200Attribute()
 	{
 		return str_limit($this->review, 200, '...');
+	}
+
+	public function getScoreAttribute()
+	{
+		if ($this->fa_rat) return (int)$this->fa_rat;
+		else return false;
 	}
 
 

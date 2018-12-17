@@ -7,26 +7,35 @@
     <title>lomejordelatv - películas en televisión</title>
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" rel="stylesheet">
 
 
 </head>
 <body>
 	<div class="header">
 		<div class="main-wrap header-wrap">
-			<div class="title">
-                <span class="icon-tv"></span>
-				<p>lomejordelatv</p>
+            <div class="header-wrap-left">
+                <div class="title">
+                    <span class="icon-tv"></span>
+                    <p>lomejordelatv</p>
+                </div>
+                <nav class="main-menu">
+                    <a href="{{route('tv')}}">Televisión</a>
+                    <a href="{{route('netflix')}}">Netflix</a>
+                    <a href="">HBO</a>
+                    <a href="">Amazon</a>
+                    <a href="">Itunes</a>
+                </nav>
             </div>
-            <nav class="main-menu">
-                <a href="">Televisión</a>
-                <a href="">Netflix</a>
-                <a href="">HBO</a>
-                <a href="">Amazon</a>
-                <a href="">Itunes</a>
-            </nav>
+            <div class="header-wrap-right">
+                <nav class="side-menu">
+                    <a class="search-btn" href="">Buscar</a>
+                    <a class="user-btn" href="">Entra con tu usuario</a>
+                </nav>
+            </div>
 		</div>
-	</div>
+    </div>
+
     <div class="main">
     	<div class="main-wrap">
             @yield('content')

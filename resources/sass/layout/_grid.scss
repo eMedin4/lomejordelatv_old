@@ -8,6 +8,14 @@
   padding: 10px;
 }
 
+.col-3 {
+  padding-left: 30px;
+}
+
+.main {
+  background: radial-gradient(at top, #2b2d31, #202124, #202124);
+}
+
 .main-layout .col-1 {
   flex-basis: 30%;
 }
