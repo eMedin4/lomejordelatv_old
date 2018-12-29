@@ -5,8 +5,8 @@ use Unirest\Request;
 use App\Library\Format;
 use App\Library\Output;
 use App\Library\Providers\Imdb;
-use App\Library\Repository;
 use App\Models\Movie;
+use App\Models\Season;
 use App\Models\Verified;
 Use App\Library\Images;
 
@@ -15,33 +15,33 @@ class Themoviedb
 	private $format;
 	private $output;
 	private $imdb;
-	private $repository;
 	private $images;
 
-    public function __Construct(Format $format, Output $output, Imdb $imdb, Repository $repository, Images $images)
+    public function __Construct(Format $format, Output $output, Imdb $imdb, Images $images)
 	{
 		$this->format = $format;
 		$this->output = $output;
 		$this->imdb = $imdb;
-		$this->repository = $repository;
 		$this->images = $images;
 	}
 
-    public function getMovie($faData, $source = 'browse', $type = 'movie')
+    public function getMovie($faData)
     {
 		// Responde con array con keys: response, message, id(?), tm_title(?), tm_review(?)
 
-		$getId = $this->getId($faData, $type);
+		$getId = $this->getId($faData);
 		//si no encuentra el id de tmdb
 		if ($getId['response'] == false) {
 			return $getId;
 		}
 
-		if ($type == 'show') {
+		if ($faData['fa_type'] == 'show') {
 			$tmData = $this->getShowData($getId['tm_id']);
+			if ($tmData['response'] == false) return $tmData;
 			$imData = $this->imdb->getMovie($tmData['im_id'], $tmData['tm_last_year']);
 		} else {
 			$tmData = $this->getMovieData($getId['tm_id']);
+			if ($tmData['response'] == false) return $tmData;
 			$imData = $this->imdb->getMovie($tmData['im_id'], $tmData['tm_year']);
 		}
 		
@@ -49,41 +49,38 @@ class Themoviedb
 
     }
 
-    public function getId($faData, $type)
+    public function getId($faData)
     {
-		// Responde con array con keys: response, message, verified_manually y id(?)
+		// Responde con array con keys: response, message, y id(?)
 
         $faId = $faData['fa_id'];
         $faTitle = $faData['fa_title'];
         $faOriginal = $faData['fa_original'];
 		$faYear = $faData['fa_year'];
+		$faType = $faData['fa_type'];
+		$method = 'getApi' . $faType . 'Id';
 		
 		$verify = Verified::where([['id_1', $faId], ['source_2', 'tm']])->first();
 		if ($verify) {
 			$data['response'] = true;
 			$data['message'] = $faData['fa_title'] . " : Encontramos id de tmdb desde verificadas";
-			$data['verified_manually'] = true;
 			$data['tm_id'] = $verify->id_2;
 			return $data;
 		}
 
-		if ($type == 'show') $response = $this->getApiShowId($faTitle, $faYear);
-		else $response = $this->getApiMovieId($faTitle, $faYear);
+		$response = $this->{$method}($faTitle, $faYear);
 		if ($response->body->total_results > 0) {
-			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $type);
+			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $faType);
 			if ($data['response'] == True) {
-				$data['verified_manually'] = false;
 				$data['message'] = $faData['fa_title'] . " : Encontramos id de tmdb a la primera (por titulo)";
 				return $data;
 			}
 		}
 
-		if ($type == 'show') $response = $this->getApiShowId($faOriginal, $faYear);
-		else $response = $this->getApiMovieId($faOriginal, $faYear);
+		$response = $this->{$method}($faOriginal, $faYear);
 		if ($response->body->total_results > 0) {
-			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $type);
+			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $faType);
 			if ($data['response'] == True) {
-				$data['verified_manually'] = false;
 				$data['message'] = $faData['fa_title'] . " : Encontramos id de tmdb a la segunda (por original)";
 				return $data;
 			}
@@ -91,12 +88,10 @@ class Themoviedb
 
 		//lo volvemos a intentar con año -1
 		$fwYear = $faYear - 1;
-		if ($type == 'show') $response = $this->getApiShowId($faTitle, $fwYear);
-		else $response = $this->getApiMovieId($faTitle, $fwYear);
+		$response = $this->{$method}($faTitle, $fwYear);
 		if ($response->body->total_results > 0) {
-			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $type);
+			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $faType);
 			if ($data['response'] == True) {
-				$data['verified_manually'] = false;
 				$data['message'] = $faData['fa_title'] . " : Encontramos id de tmdb a la tercera (por año -1)";
 				return $data;
 			}
@@ -104,19 +99,18 @@ class Themoviedb
 
 		//lo volvemos a intentar con año +1
 		$frYear = $faYear + 1;
-		if ($type == 'show') $response = $this->getApiShowId($faTitle, $frYear);
-		else $response = $this->getApiMovieId($faTitle, $frYear);
+		$response = $this->{$method}($faTitle, $frYear);
 		if ($response->body->total_results > 0) {
-			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $type);
+			$data = $this->checkMatch($faId, $faTitle, $faOriginal, $faYear, $response, $faType);
 			if ($data['response'] == True) {
-				$data['verified_manually'] = false;
 				$data['message'] = $faData['fa_title'] . " : Encontramos id de tmdb a la cuarta (por año +1)";
 				return $data;
 			}
 		}
 
 		$data['response'] = false;
-		$data['message'] = $faData['fa_id'] . " " . $faData['fa_count'] . "v. " . $faData['fa_title'] . " : No encontramos id de tmdb tras 4 intentos";
+		$data['message'] = $faData['fa_title'] . " " . $faData['fa_id'] . " " . $faData['fa_count'] . "v. : No encontramos id de tmdb tras 4 intentos";
+		$data['log'] = ($faData['fa_count'] > 100) ? true : false; //para guardar o no en archivo log
     	return $data;
     }
 
@@ -242,8 +236,14 @@ class Themoviedb
 			if (!$more) {
 				$allMovies = array_slice($allMovies, 0, 5);
 			}
-			foreach ($allMovies as $movie) {
-				$allMoviesDetails[] = $this->getMovieData($movie->id);
+			if ($faType == 'show') {
+				foreach ($allMovies as $movie) {
+					$allMoviesDetails[] = $this->getShowData($movie->id);
+				}
+			} else {
+				foreach ($allMovies as $movie) {
+					$allMoviesDetails[] = $this->getMovieData($movie->id);
+				}
 			}
 			return $allMoviesDetails;
 		}
@@ -256,6 +256,8 @@ class Themoviedb
 	{
 		// LLAMADA AL API DE TMDB PARA EL RESTO DE DATOS
 		$tmdb = Request::get('https://api.themoviedb.org/3/movie/' . $id . '?api_key=' . env('TMDB_API_KEY') . '&language=es&append_to_response=credits');
+		if ($tmdb->code != 200) return ['response' => false, 'message' => 'error ' . $tmdb->code];
+
 		$data['tm_id'] = $tmdb->body->id;
 		$data['credits'] = $tmdb->body->credits;
 		$data['genres'] = $tmdb->body->genres;	
@@ -267,8 +269,11 @@ class Themoviedb
 		$data['tm_original'] = $tmdb->body->original_title;
 		$tmYear = explode('-', $tmdb->body->release_date);
 		$data['tm_year'] = $tmYear[0];
+		$data['tm_last_year'] = null;
 		$data['tm_duration'] = $tmdb->body->runtime;
 		$data['tm_countries'] = $tmdb->body->production_countries;
+		$data['tm_type'] = 'movie';
+		$data['response'] = true;
 		return $data;
 	}
 
@@ -276,6 +281,8 @@ class Themoviedb
 	{
 		// LLAMADA AL API DE TMDB PARA EL RESTO DE DATOS
 		$tmdb = Request::get('https://api.themoviedb.org/3/tv/' . $id . '?api_key=' . env('TMDB_API_KEY') . '&language=es&append_to_response=external_ids');
+		if ($tmdb->code != 200) return ['response' => false, 'message' => 'error ' . $tmdb->code];
+
 		$data['tm_id'] = $tmdb->body->id; //int
 		$data['genres'] = $tmdb->body->genres; //object
 		$data['im_id'] = $tmdb->body->external_ids->imdb_id; //string
@@ -285,33 +292,36 @@ class Themoviedb
 		$data['tm_title'] = $tmdb->body->name; //string
 		$data['tm_original'] = $tmdb->body->original_name; //string
 		$tmFirstYear = explode('-', $tmdb->body->first_air_date); //string
-		$data['tm_first_year'] = $tmFirstYear[0]; //string
+		$data['tm_year'] = $tmFirstYear[0]; //string
 		$tmLastYear = explode('-', $tmdb->body->last_air_date); //string
 		$data['tm_last_year'] = $tmLastYear[0]; //string
 		if (empty($data['tm_last_year'])) $data['tm_last_year'] = null;
 		$data['tm_countries'] = $tmdb->body->origin_country; //array
-		$data['tm_seasons'] = $tmdb->body->number_of_seasons; //int
+		$data['tm_number_of_seasons'] = $tmdb->body->number_of_seasons; //int
+		$data['tm_type'] = 'show';
+		$data['tm_seasons'] = $tmdb->body->seasons;
+		$data['response'] = true;
 		return $data;
 	}
-	
-	public function updateAllMovieGenres()
-    {
-		$response = Request::get('https://api.themoviedb.org/3/genre/movie/list?api_key=' . env('TMDB_API_KEY') . '&language=es-ES');
-		$apiGenres = $this->repository->updateAllGenres($response->body->genres);
+
+	public function updateTmdbGenres()
+	{
+		$response1 = Request::get('https://api.themoviedb.org/3/genre/movie/list?api_key=' . env('TMDB_API_KEY') . '&language=es-ES');
+		$response2 = Request::get('https://api.themoviedb.org/3/genre/tv/list?api_key=' . env('TMDB_API_KEY') . '&language=es-ES');
+		
+		//juntamos y eliminamos dubplicados
+		$response = array_merge($response1->body->genres, $response2->body->genres);
+		$response = array_unique($response, SORT_REGULAR);
+		return $response;
 	}
 	
-	public function updateAllShowGenres()
-    {
-		$response = Request::get('https://api.themoviedb.org/3/genre/tv/list?api_key=' . env('TMDB_API_KEY') . '&language=es-ES');
-		$apiGenres = $this->repository->updateAllGenres($response->body->genres);
-	}
 	
-    public function updateBackgrounds($source)
+    public function updateBackgrounds()
     {
-		Movie::where('id', '>', '21260')->chunk(100, function($movies) use($source) {
+		Movie::where('id', '>', '41984')->chunk(100, function($movies) {
 			foreach ($movies as $movie) {
 				$tmData = $this->getMovieData($movie->tm_id);
-				$saveBackground = $this->images->saveBackground($tmData['background'], $movie->slug, $source);
+				$saveBackground = $this->images->saveBackground($tmData['background'], $movie->slug);
 				if ($saveBackground) $movie->check_background = 1;
 				else $movie->check_background = 0;
 				$movie->save();
@@ -325,5 +335,31 @@ class Themoviedb
 			else $movie->check_background = 0;
 			$movie->save();
 		}*/
-    }
+	}
+
+	public function setAllSeasons()
+	{
+		Movie::where([['id', '>', '43255'], ['type', 'show']])->chunkById(100, function($movies) {
+			foreach ($movies as $movie) {
+				$seasons = $this->getShowData($movie->tm_id);
+				if ($seasons['response'] == false) {
+					$this->output->message( "$movie->id $movie->title $movie->type : El request de tmdb da error, revisar si no corresponde el tipo", true, 'error');
+					continue;
+				}
+				$seasons = $seasons['tm_seasons'];
+				Season::where('movie_id', $movie->id)->delete();
+				$seasonsArray = [];
+				foreach($seasons as $key => $season) {
+					$seasonsArray[$key]['movie_id'] = $movie->id;
+					$seasonsArray[$key]['number'] = $season->season_number;
+					$seasonsArray[$key]['year'] = substr($season->air_date, 0, 4);
+					$seasonsArray[$key]['episodes'] = $season->episode_count;
+					$seasonsArray[$key]['name'] = $season->name;
+				}
+				Season::insert($seasonsArray);
+				$this->output->message( $movie->id . " : guardamos", false);
+			}
+		});
+	}
+	
 }

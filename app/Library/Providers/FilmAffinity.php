@@ -2,17 +2,14 @@
 namespace App\Library\Providers;
 
 use App\Library\Format;
-use App\Library\Algorithm;
 
 class FilmAffinity
 {
 	private $format;
-	private $algorithm;
 
-    public function __Construct(Format $format, Algorithm $algorithm)
+    public function __Construct(Format $format)
 	{
 		$this->format = $format;
-		$this->algorithm = $algorithm;
 	}
 
     public function getMovie($crawler, $minDuration = 0)
@@ -22,7 +19,7 @@ class FilmAffinity
         //Scrapeamos película
 		$faData['fa_id'] = $this->format->faId($crawler->filter('.ntabs a')->eq(0)->attr('href'));
 		$faData['fa_title'] = $crawler->filter('#main-title span')->text();
-		$faData['fa_type'] = strpos($faData['fa_title'], 'erie de TV)') ? 'show' : 'movie';
+		$faData['fa_type'] = (preg_match('/\((Serie de TV)\)|\((Miniserie de TV)\)/', $faData['fa_title'])) ? 'show' : 'movie';
 		$faData['fa_title'] = $this->format->removeString($faData['fa_title'], ['(TV)', '(Serie de TV)', '(Miniserie de TV)']);
 
 		//Construimos array con los datos de la table(no tienen ids)
@@ -61,9 +58,8 @@ class FilmAffinity
 		if ($faRat && $faCount) {
 			$faData['fa_rat'] = $faRat;
 			$faData['fa_count'] = $faCount;
-			$faData['fa_popularity'] = $this->algorithm->popularity($faData['fa_year'], $faCount, 'fa');
 		} else {
-			$faData['fa_rat'] = $faData['fa_count'] = $faData['fa_popularity'] = NULL;
+			$faData['fa_rat'] = $faData['fa_count'] = NULL;
 		}
 		
 		//image

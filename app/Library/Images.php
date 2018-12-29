@@ -16,7 +16,7 @@ class Images
         $this->output = $output;
     }
 
-	public function savePoster($file, $slug, $source = 'browse') 
+	public function savePoster($file, $slug) 
 	{
 		try {
 			$url = 'http://image.tmdb.org/t/p/w1280' . $file;
@@ -24,12 +24,12 @@ class Images
 			Storage::disk('s3')->put('movieimages/posters/lrg/' . $slug . '.jpg', $image);
 			return true;
 		} catch (\Exception $e) {
-			$this->output->message('Error en Image->savePoster: ' . $slug, true, $source);
+			$this->output->message('Error en Image->savePoster: ' . $slug, true, 'error');
 			return false;
 		}
 	}
 
-	public function saveBackground($file, $slug, $source = 'browse') 
+	public function saveBackground($file, $slug) 
 	{
 		try {
 			$url = 'http://image.tmdb.org/t/p/w1280' . $file;
@@ -37,10 +37,10 @@ class Images
 			Storage::disk('s3')->put('movieimages/backgrounds/lrg/' . $slug . '.jpg', $image, 'public');
 			$image = Image::make($url)->fit(352, 198)->stream()->detach();
 			Storage::disk('s3')->put('movieimages/backgrounds/sml/' . $slug . '.jpg', $image, 'public');
-			$this->output->message('Background guardado ok: ' . $slug, false, $source);
+			//$this->output->message('Background guardado ok: ' . $slug, false);
 			return true;
 		} catch (\Exception $e) {
-			$this->output->message('Error en Image->saveBackground: ' . $slug, false, $source);
+			$this->output->message('Error en Image->saveBackground: ' . $slug, false, 'error');
 			return false;
 		}
 	}

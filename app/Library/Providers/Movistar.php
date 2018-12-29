@@ -19,11 +19,11 @@ class Movistar
         $this->output = $output;
     }
 
-    public function getMovies($source)
+    public function getMovies()
     {
         //borramos times ya pasados
         $this->repository->resetMovistar();
-        $this->output->message('Borrada programación antigua', false, $source);
+        $this->output->message('Borrada programación antigua', false);
 
         $client = new Client();
 
@@ -34,18 +34,18 @@ class Movistar
         }
 
         foreach ($daysToScrap as $dayToScrap) {
-            $this->output->message("Descargando fecha $dayToScrap", false, $source);
+            $this->output->message("Descargando fecha $dayToScrap", false);
             foreach (config('movies.channels') as $channelCode => $channel) {
-                $this->output->message("$channel ... ", false, $source, false);
+                $this->output->message("$channel ... ", false, 'line');
                 $url = 'http://www.movistarplus.es/guiamovil/' . $channelCode . '/' . $dayToScrap;
                 $crawler = $client->request('GET', $url);
                 if ($client->getResponse()->getStatus() !== 200) {
-                    $this->output->message("$url devuelve error $client->getResponse()->getStatus()", true, $source);
+                    $this->output->message("$url devuelve error $client->getResponse()->getStatus()", true);
                 } 
                 $this->scrapPage($client, $crawler, $dayToScrap, $channelCode, $channel);
-                $this->output->message("ok", false, $source);
+                $this->output->message("ok", false);
             }
-            $this->output->message("Finalizada fecha $dayToScrap", true, $source);
+            $this->output->message("Finalizada fecha $dayToScrap", true);
             $this->repository->setParam('Movistar', Null, $dayToScrap);
         }
     }
@@ -56,6 +56,9 @@ class Movistar
 		$crawler->filter('.container_box.g_CN, .container_box.g_SR')->each(function($node, $i) use($client, $date, $channelCode, $channel) {
             
             $type = $node->filter('li.genre')->text();
+            if ($type == 'Cine') $type = 'movie';
+            elseif ($type == 'Series') $type = 'show';
+            else return;
             $title = trim($node->filter('li.title')->text());
             $time = $node->filter('li.time')->text();
             $datetime = $this->movistarDate($time, $date);
@@ -78,69 +81,96 @@ class Movistar
             $title = str_replace(config('movies.wordsTvBan'), '', $title);
 
             //LIMPIAMOS TÍTULOS DE SERIES
-            if ($type == 'Series') {
-                //Principal sospechoso 1973 (T1): Episodio 5
-                preg_match('#(T(.*?)):#', $title, $season);
-                $title = trim(substr($title, 0, strrpos($title, "(T")));
+            if ($type == 'show') {
+                $seasonCheck = preg_match('#\(T(.*?)\):#', $title, $seasonTemp);
+                $episodeCheck = preg_match('#Ep.(.*?)\s#', $title, $episodeTemp);
+                if ($seasonCheck) {
+                    $title = trim(substr($title, 0, strrpos($title, "(T")));
+                    $season = $seasonTemp[1];
+                } else $season = null;
+                if ($episodeCheck && is_numeric($episodeTemp[1])) {
+                    $episode = $episodeTemp[1];
+                } else $episode = null;
+            } else {
+                $season = $episode = null;
             }
-
-            dd($title, $season);
-
-            dd($type, $title);
             
             //BUSCAMOS 1 COINCIDENCIA POR TITULO EXACTO
-            $movie = $this->repository->searchByExactTitle($title);
+            $movie = $this->repository->searchByExactTitle($title, $type);
             if ($movie) {
                 MovistarLog::create(['movistar_title' => $title, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada sin entrar (por title único) ']);
-                $this->repository->setMovie($movie, $datetime, $channelCode, $channel);
+                $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
                 return;
             } 
 
             //BUSCAMOS 1 COINCIDENCIA POR SLUG
-            $movie = $this->repository->searchByExactSlug($title);
+            $movie = $this->repository->searchByExactSlug($title, $type);
             if ($movie) {
                 MovistarLog::create(['movistar_title' => $title, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada sin entrar (por slug único) ']);
-                $this->repository->setMovie($movie, $datetime, $channelCode, $channel);
+                $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
                 return;
             } 
 
-            //SI NO LA ENCONTRAMOS ENTRAMOS EN LA FICHA
-			$page = $client->click($node->filter('a')->link());
 
-            //ALGUNAS FICHAS DE 'CINE CUATRO', 'CINE BLOCKBUSTER',.. SIN PELICULA, NO TIENEN AÑO EN LA FICHA, ANULAMOS
-            if ($page->filter('p[itemprop=datePublished]')->count() == 0) {
-                MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'Baneada entrando, al no tener año dentro de la ficha de la película.']);
-                return;
-            }
+            //SI NO LA ENCONTRAMOS ENTRAMOS EN LA FICHA SOLO EN PELICULAS
+            if ($type == 'movie') {
 
-            //ANULAMOS CUALQUIER PELICULA SIN DURACIÓN
-            if ($page->filter('span[itemprop=duration]')->count() == 0) {
-                MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'Baneada entrando, al no tener duración en la etiqueta itemprop']);
-                return;
-            }
-            //ANULAMOS CUALQUIER PELÍCULA CON DURACIÓN DEMASIADO CORTA
-            $duration = $page->filter('span[itemprop=duration]')->text();
-            $duration = explode(':', $duration);
-            $minutes = $duration[0] * 60 + (int)$duration[1];
-            if ($minutes < 60) {
-                MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'Baneada entrando, al tener una duración inferior a 1 hora']);
-                return;
-            }
+                $page = $client->click($node->filter('a')->link());
+    
+    
+                //ALGUNAS FICHAS DE 'CINE CUATRO', 'CINE BLOCKBUSTER',.. SIN PELICULA, NO TIENEN AÑO EN LA FICHA, ANULAMOS
+                if ($page->filter('p[itemprop=datePublished]')->count() == 0) {
+                    MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'Baneada entrando, al no tener año dentro de la ficha de la película.']);
+                    return;
+                }
+    
+                //ANULAMOS CUALQUIER PELICULA SIN DURACIÓN
+                if ($page->filter('span[itemprop=duration]')->count() == 0) {
+                    MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'Baneada entrando, al no tener duración en la etiqueta itemprop']);
+                    return;
+                }
+    
+                //ANULAMOS CUALQUIER PELÍCULA CON DURACIÓN DEMASIADO CORTA
+                $duration = $page->filter('span[itemprop=duration]')->text();
+                $duration = explode(':', $duration);
+                $minutes = $duration[0] * 60 + (int)$duration[1];
+                if ($minutes < 60) {
+                    MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'Baneada entrando, al tener una duración inferior a 1 hora']);
+                    return;
+                }
+    
+                //COJEMOS DATOS
+                $year = $page->filter('p[itemprop=datePublished]')->attr('content');
+                $original = $this->getElementIfExist($page, '.title-especial p', NULL);
+    
+                //BUSCAMOS CON LOS DATOS
+                $movie = $this->repository->searchFromMovistarByDetails($title, $original, $year, $minutes);
+    
+                if ($movie) {
+                    MovistarLog::create(['movistar_title' => $title, 'movistar_original' => $original, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada entrando, por detalles: ']);
+                    $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
+                    return;
+                }
 
-            //COJEMOS DATOS
-            $year = $page->filter('p[itemprop=datePublished]')->attr('content');
-            $original = $this->getElementIfExist($page, '.title-especial p', NULL);
-
-            //BUSCAMOS CON LOS DATOS
-            $movie = $this->repository->searchFromMovistarByDetails($title, $original, $year, $minutes);
-
-            if ($movie) {
-                MovistarLog::create(['movistar_title' => $title, 'movistar_original' => $original, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada entrando, por detalles: ']);
-                $this->repository->setMovie($movie, $datetime, $channelCode, $channel);
-                return;
-            }
+                MovistarLog::create(['movistar_title' => $title, 'movistar_original' => $original, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => "Cine: No encontrada ni entrando"]);
             
-            MovistarLog::create(['movistar_title' => $title, 'movistar_original' => $original, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => 'No encontrada ni entrando']);
+            } else { //es serie
+
+                //SI EL TÍTULO TIENE PARÉNTESIS SEPARAMOS, DAMOS LA VUELTA Y COMPROBAMOS
+                $splitTitle = preg_split("/[()]+/", $title, -1, PREG_SPLIT_NO_EMPTY);
+                if (count($splitTitle) > 1) {
+                    $title = $splitTitle[1] . ' ' . $splitTitle[0];
+                    $movie = $this->repository->searchByExactSlug($title, $type);
+                    if ($movie) {
+                        MovistarLog::create(['movistar_title' => $title, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada sin entrar (por slug único dando la vuelta a parentesis) ']);
+                        $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
+                        return;
+                    } 
+                }
+
+                MovistarLog::create(['movistar_title' => $title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 0, 'comment' => "Serie: No encontrada"]);
+
+            }
 
         });
     }

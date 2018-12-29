@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Administration;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Library\MixMovies;
+use App\Library\CreateItems;
 use App\Library\Testing;
 use App\Library\Providers\Movistar;
 use App\Library\Providers\Netflix;
@@ -12,15 +12,15 @@ use App\Library\Providers\Netflix;
 class Dashboard
 {
     private $request;
-    private $mixMovies;
+    private $createitems;
     private $movistar;
     private $testing;
     private $netflix;
 
-    public function __Construct(Request $request, MixMovies $mixMovies, Movistar $movistar, Testing $testing, Netflix $netflix)
+    public function __Construct(Request $request, CreateItems $createitems, Movistar $movistar, Testing $testing, Netflix $netflix)
 	{
         $this->request = $request;
-        $this->mixMovies = $mixMovies;
+        $this->createitems = $createitems;
         $this->movistar = $movistar;
         $this->testing = $testing;
         $this->netflix = $netflix;
@@ -49,7 +49,7 @@ class Dashboard
     {
         $faid = trim($this->request->input('faid'));
         if (substr( $faid, 0, 4 ) !== "film") $faid = "film" . $faid;
-        $this->mixMovies->setFromFaId('browse', $faid);
+        $this->createitems->setFromFaId('browse', $faid);
     }
 
     public function setFromMultiIds()
@@ -57,7 +57,7 @@ class Dashboard
         $faids = explode(',', $this->request->input('faids'));
         foreach($faids as $faid) {
 			if (substr( trim($faid), 0, 4 ) !== "film") $faid = "film" . $faid;
-            $this->mixMovies->setFromFaId('browse', $faid);
+            $this->createitems->setFromFaId('browse', $faid);
         }
     }
 
@@ -68,7 +68,7 @@ class Dashboard
         else $firstPage = 1;
         if ($this->request->input('total-pages')) $totalPages = $this->request->input('total-pages');
         else $totalPages = 1000;
-        $this->mixMovies->setFromLetter('browse', $letter, $firstPage, $totalPages);
+        $this->createitems->setFromLetter('browse', $letter, $firstPage, $totalPages);
     }
 
     public function setMovistar()

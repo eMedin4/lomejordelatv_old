@@ -103,7 +103,7 @@ class Movie extends Model
 
 	public function getScoreAttribute()
 	{
-		if ($this->fa_rat) return (int)$this->fa_rat;
+		if ($this->fa_rat) return round($this->fa_rat);
 		else return false;
 	}
 

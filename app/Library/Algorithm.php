@@ -3,6 +3,7 @@ namespace App\Library;
 
 use App\Library\Format;
 use Illuminate\Support\Facades\Log;
+use App\Models\Movie;
 
 use Carbon\Carbon;
 
@@ -15,48 +16,65 @@ class Algorithm
 	{
 		$this->format = $format;
     }
-	
-	public function popularity($year, $count, $source)
+
+	public function popularity($year, $endYear, $count, $type)
 	{
+		if (!$count) return 0;
 
-		//establecemos los máximos
-		if ($source == 'fa') {
-			$source_highest = 50000;
-		} else if ($source == 'im') {
-			$source_highest = 100000;
-		} else {
-			return 'error en algoritmo';
-		}
-
-		//step1 : convertimos el count en relativo a 10
-		if ($count > $source_highest) $count = $source_highest;
-		$step1 = $count/($source_highest/10);
-		$step1 = round($step1, 1);
+		if ($endYear) $year = $endYear;
 		
-		//step2 : calculamos el coeficiente de año y multiplicamos
-		$yearMax = 2019;
-		$yearMin = 1999;
-		$yearCoefMax = 2.2;
-		$yearCoefMin = 0.3;
-		if ($year < $yearMin || $year == null) $year = $yearMin;
-		$yearCoef = ((($year - $yearMin) * ($yearCoefMax - $yearCoefMin)) / ($yearMax - $yearMin)) + $yearCoefMin;
-		$yearCoef = round($yearCoef, 1);
-		$step2 = round($step1 * $yearCoef, 1);
-		if ($step2 > 10) $step2 = 10;
-
-		//class: calculamos la clase para css, de 0 a 5
-		$class = (int)($step2 / 2);
-		
-		return [
-			"step1" => $step1, 
-			"step2" => $step2, 
-			"class" => $class
+		$yearCoef = [
+			2019 => 100,
+			2018 => 70,
+			2017 => 30,
+			2016 => 12,
+			2015 => 8,
+			2014 => 5,
+			2013 => 4,
+			2012 => 3,
+			2011 => 2,
+			2010 => 1,
 		];
+		if ($year < 2010) $getYearCoef = 1;
+		else $getYearCoef = $yearCoef[$year];
 		
+		$count = $count / 1000;
+		$response = (int)($getYearCoef * $count);
+
+		return $response;
+
+		/*
+			peliculas
+			Origen 2010 150k
+			roma 2018 4k
+			okja 2017 11k
+			mowgli 2018 2k
+
+			series
+			padre de familia 17t 1999-2018 100k
+			walking dead 9t 2010-2018 71k
+			shameless 9t 2011-2018 13k
+			La maldicion de hill house 2018-2018 1t 8k
+			Sons of anarchy 2008-2014 7t 21k
+			Altered Carbon 2018-2018 1t 6k
+			Desencanto 2018-2018 2t 4k
+		*/
 	}
 
-	
-    
+	public function updatePopularity()
+	{
+		Movie::where('id', '>', '200')->chunk(100, function($movies) {
+			foreach ($movies as $movie) {
+				$newValue = $this->popularity($movie->year, $movie->last_year, $movie->fa_count, $movie->type);
+				$movie->popularity = $newPopularity;
+				$movie->save();
+			}
+		});
+	}
 
-    
+
+
+
+
+	
 }

@@ -15,17 +15,9 @@ use App\Models\NetflixLogs;
 use App\Models\Verified;
 use App\Models\Ban;
 
-Use App\Library\Images;
 use Carbon\Carbon;
 
 class Repository {
-
-    private $images;
-
-    public function __Construct(Images $images)
-    {
-        $this->images = $images;
-    }
 
     public function checkIfMovieExist($faid)
     {
@@ -47,145 +39,6 @@ class Repository {
         $movie->fa_rat = $card['fa_rat'];
         $movie->fa_count = $card['fa_count'];
         $movie->save();
-    }
-
-    public function storeItem($data, $source, $type)
-    {
-        $movie = Movie::firstOrNew(['fa_id' => $data['fa_id']]);
-
-        if ($movie->exists) $status = 'updated';
-        else $status = 'created';
-
-        $movie->title               = $data['fa_title'];
-        $movie->original_title      = $data['fa_original'];
-        $movie->country             = $data['fa_country'];
-        $movie->duration            = $data['fa_duration'];
-        $movie->review              = $data['tm_review'] ? $data['tm_review'] : $data['fa_review'];
-        $movie->fa_id               = $data['fa_id'];
-        $movie->tm_id               = $data['tm_id'];
-        $movie->year                = $data['fa_year'];
-        $movie->im_id               = $data['im_id'];
-        $movie->fa_rat              = $data['fa_rat'];
-        $movie->fa_count            = $data['fa_count'];
-        $movie->im_rat              = $data['im_rat'];
-        $movie->im_count            = $data['im_count'];
-        $movie->rt_rat              = $data['rt_rat'];
-        $movie->fa_popularity       = $data['fa_popularity']['step2'];
-        $movie->im_popularity       = $data['im_popularity']['step2'];
-        $movie->fa_popularity_class = $data['fa_popularity']['class'];
-        $movie->im_popularity_class = $data['im_popularity']['class'];
-        $movie->reliable_duration   = false;
-        $movie->type                = $type;
-        if ($type == 'show') {
-            $movie->lastYear        = $data['tm_last_year'];
-            $movie->seasons         = $data['tm_seasons'];
-        }
-
-        if (!$movie->exists) { /*solo recalculamos slugs para nuevas películas*/
-            $movie->slug             = $this->setSlug($data['fa_title']);
-        }
-
-        $poster = isset($data['poster']) ? $data['poster'] : null;
-        $background = isset($data['background']) ? $data['background'] : null;
-
-        if ($poster) {
-            $savePoster = $this->images->savePoster($poster, $movie->slug, $source);
-            if ($savePoster) $movie->check_poster = 1;
-            else $movie->check_poster = 0;
-        }
-
-        if ($background) {
-            $saveBackground = $this->images->saveBackground($background, $movie->slug, $source);
-            if ($saveBackground) $movie->check_background = 1;
-            else $movie->check_background = 0;
-        }
-
-        //GUARDAMOS TODO
-        $movie->save();
-
-        if (array_key_exists('credits', $data)) {
-
-            //GUARDAR CARÁCTERES
-            $movie->characters()->detach();
-
-            foreach($data['credits']->cast as $i => $cast) {
-                //GUARDAMOS ACTOR
-                $character = Character::firstOrNew(['id' => $cast->id]);
-                $character->id             = $cast->id;
-                $character->name           = $cast->name;
-                $character->department     = 'actor';
-                $character->photo          = $cast->profile_path;
-                $character->save();
-                //GUARDAMOS EN ARRAY LISTO PARA SINCRONIZAR DESPUES
-                $sync[$cast->id] = ['order' => $cast->order];
-                //GUARDAMOS IMAGEN SI TIENE
-                if ($cast->profile_path) {
-                    $this->images->saveCredit($cast->profile_path, $cast->name, $movie->id);
-                }
-            }
-
-            foreach($data['credits']->crew as $i => $crew)
-            {
-                //SOLO GURADAMOS DIRECTOR
-                if($crew->job == 'Director') {
-                    $character = Character::firstOrNew(['id' => $crew->id]);
-                    $character->id             = $crew->id;
-                    $character->name           = $crew->name;
-                    $character->department     = 'director';
-                    $character->photo          = $crew->profile_path;
-                    $character->save();
-                    //GUARDAMOS EN ARRAY LISTO PARA SINCRONIZAR DESPUES
-                    $sync[$crew->id] = ['order' => -1];
-                    //GUARDAMOS IMAGEN SI TIENE
-                    if ($crew->profile_path) {
-                        $this->images->saveCredit($crew->profile_path, $crew->name, $movie->id);
-                    }
-                }
-            }
-
-            //SINCRONIZAMOS TABLA PIVOTE DE CHARACTERS
-            if (isset($sync)) {
-                $movie->characters()->sync($sync);
-            }
-
-        }
-
-        //SINCRONIZAMOS GENRES
-        $values = array_column($data['genres'], 'id');
-        $movie->genres()->sync($values);
-
-        return ['status' => $status, 'id' => $movie->id];
-
-    }
-
-    public function setSlug($slug)
-    {
-        $slug = str_slug($slug, '-');
-        $count = Movie::whereRaw("slug RLIKE '^{$slug}(-[0-9]+)?$'")->count();
-        if (empty($count)) return $slug; //si no hay slug retornamos el slug normal
-
-        //ya hay algún slug
-        $check = $this->checkSlug($slug, $count);
-        if (empty($check)) return "{$slug}-{$count}"; //verificamos nuestro slug y si no existe lo retornamos
-
-        //si nuestro nuevo slug ya existe vamos a ir probando nuevos
-        for ($i=1; $i < 10; $i++) { 
-            $check = $this->checkSlug($slug, $i);
-            if (empty($check)) return "{$slug}-{$i}";
-        }
-    }
-
-    public function checkSlug($slug, $count)
-    {
-        return Movie::where('slug', "{$slug}-{$count}")->count();
-    }
-
-    //ACTUALIZA TODOS LOS GENEROS
-    public function updateAllGenres($apiGenres)
-    {
-        foreach($apiGenres as $genre) {
-            Genre::firstOrCreate(['id' => $genre->id], ['name' => $genre->name]);
-        }
     }
 
     public function setParam($name, $value=NULL, $date=NULL) 
@@ -222,26 +75,17 @@ class Repository {
         Netflix::truncate();
     }
 
-    public function setMovie($movie, $datetime, $channelCode, $channel)
+    public function searchByExactTitle($title, $type)
     {
-        $match = MovistarTime::where([['movie_id', '=', $movie->id],['time', '=', $datetime]])->first();
-        if ($match) return;
-        MovistarTime::insert(
-            ['time' => $datetime, 'channel' => $channel, 'channel_code' => $channelCode, 'movie_id' => $movie->id]
-        );
-    }
-
-    public function searchByExactTitle($title)
-    {
-        $movies = Movie::where('title', $title)->get();
+        $movies = Movie::where([['title', $title], ['type', $type]])->get();
         if ($movies->count() == 1) return $movies->first();
         else return false;
     }
 
-    public function searchByExactSlug($title)
+    public function searchByExactSlug($title, $type)
     {
         $slug = str_slug($title, '-');
-        $movies = Movie::where('slug', 'like', '%' . $slug . '%')->get();
+        $movies = Movie::where([['slug', 'like', '%' . $slug . '%'], ['type', $type]])->get();
         if ($movies->count() == 1) return $movies->first();
         else return false;
     }
@@ -269,56 +113,84 @@ class Repository {
 		return false;
     }
     
-    public function getMovieFromNetflix($title, $year)
+    public function getMovieFromNetflix($title, $year, $type)
     {
         //devuelve id o false
+        if ($title == 'series') {
 
-        $movies = Movie::where('original_title', $title)
-            ->whereBetween('year', [$year - 1, $year + 1])
-            ->get();
-   
-        if ($movies->count() == 1) {  
-            $movie = $movies->first();
-            return $movies->first();
-        }
+            $movies = Movie::where('original_title', $title)->get();
+            if ($movies->count() == 1) return $movies->first();
 
-        $movies = Movie::where('original_title', 'like', '%' . $title . '%')
-            ->whereBetween('year', [$year - 1, $year + 1])
-            ->get();
+            $movies = Movie::where('original_title', 'like', '%' . $title . '%')->get();
+            if ($movies->count() == 1) return $movies->first();
 
-        if ($movies->count() == 1) {
-            $movie = $movies->first();
-            return $movies->first();
-        }
+            $movies = Movie::where('slug', 'like', '%' . str_slug($title) . '%')->get();
+            if ($movies->count() == 1) return $movies->first();
 
-        $movies = Movie::where('slug', 'like', '%' . str_slug($title) . '%')
-            ->whereBetween('year', [$year - 1, $year + 1])
-            ->get();
 
-        if ($movies->count() == 1) {   
-            $movie = $movies->first();
-            return $movies->first();
+        } else {
+
+            $movies = Movie::where('original_title', $title)->whereBetween('year', [$year - 1, $year + 1])->get();
+            if ($movies->count() == 1) return $movies->first();
+
+            $movies = Movie::where('original_title', 'like', '%' . $title . '%')->whereBetween('year', [$year - 1, $year + 1])->get();
+            if ($movies->count() == 1) return $movies->first();
+
+            $movies = Movie::where('slug', 'like', '%' . str_slug($title) . '%')->whereBetween('year', [$year - 1, $year + 1])->get();
+            if ($movies->count() == 1) return $movies->first();
+
         }
    
         return false;
     }
 
-    public function setNetflix($nfid, $id)
+
+    public function setMovistar($id, $popularity, $datetime, $channelCode, $channel, $type, $season = null, $episode = null)
     {
+        $match = MovistarTime::where([['movie_id', '=', $id],['time', '=', $datetime]])->first();
+        if ($match) return;
+
+        $modifier = rand(5,15) / 10;
+        $hot = ($popularity > 1000) ? 1 : 0;
+        $popularity = $popularity * $modifier;
+
+        MovistarTime::insert([
+            'time' => $datetime, 
+            'channel' => $channel, 
+            'channel_code' => $channelCode, 
+            'movie_id' => $id, 
+            'type' => $type, 
+            'season' => $season, 
+            'episode' => $episode,
+            'hot' => $hot,
+            'trend' => $popularity,
+        ]);
+    }
+
+
+    public function setNetflix($nfid, $id, $type, $popularity)
+    {
+        $modifier = rand(5,15) / 10;
+        $hot = ($popularity > 1000) ? 1 : 0;
+        $popularity = $popularity * $modifier;
+
         Netflix::insert([
             'netflix_id' => $nfid,
-            'movie_id'=> $id
+            'movie_id'=> $id,
+            'type' => $type,
+            'hot' => $hot,
+            'trend' => $popularity,
         ]);
     }
 
     /*
         setNetflixDates
-        Funcion: Actualiza la columna new o expire con la fecha dada
+        Funcion: Actualiza la columna new o expire con la fecha dada e incrementa el valor de trend en 100
         Retorna: Numero de filas afectadas (normalmente será 0 o 1)
     */
     public function setNetflixDates($netflixId, $column, $date)
     {
-        return Netflix::where('netflix_id', $netflixId)->update([$column => $date]);
+        return Netflix::where('netflix_id', $netflixId)->increment('trend', 400, [$column => $date]);
     }
 
     /*
@@ -330,7 +202,7 @@ class Repository {
         return Netflix::where('new', null)->orWhere('expire', null)->update(['new' => NULL, 'expire' => NULL]);
     }
 
-    public function setNetflixLogs($nfOriginal, $nfYear, $nfImid, $dbOriginal, $dbYear, $dbImid)
+    /*CUARENTENA public function setNetflixLogs($nfOriginal, $nfYear, $nfImid, $dbOriginal, $dbYear, $dbImid)
     {
         NetflixLogs::insert([
             'db_original' => $dbOriginal,
@@ -340,7 +212,7 @@ class Repository {
             'nf_year' => $nfYear,
             'nf_imdb' => $nfImid,
         ]);
-    }
+    }*/
 
     /*
         checkVerify

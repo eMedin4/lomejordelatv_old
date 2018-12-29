@@ -8,7 +8,7 @@ use App\Library\Format;
 use App\Library\Providers\FilmAffinity;
 use App\Library\Providers\Themoviedb;
 Use App\Library\Images;
-Use App\Library\MixMovies;
+Use App\Library\ItemCreation;
 
 class Testing
 {
@@ -19,9 +19,9 @@ class Testing
     private $themoviedb;
     private $format;
     private $images;
-    private $mixmovies;
+    private $itemCreation;
 
-    public function __Construct(Repository $repository, Output $output, Filmaffinity $filmaffinity, Themoviedb $themoviedb, Format $format, Images $images, MixMovies $mixmovies)
+    public function __Construct(Repository $repository, Output $output, Filmaffinity $filmaffinity, Themoviedb $themoviedb, Format $format, Images $images, ItemCreation $itemCreation)
 	{
 		$this->repository = $repository;
 		$this->output = $output;
@@ -29,10 +29,10 @@ class Testing
         $this->themoviedb = $themoviedb;
         $this->format = $format;
         $this->images = $images;
-        $this->mixmovies = $mixmovies;
+        $this->itemCreation = $itemCreation;
 	}
     
-    public function faTmTest($faid, $source, $withDetails, $more)
+    public function faTmTest($faid, $withDetails, $more)
     {
         //Datos de mi db
         $dbData = $this->repository->getMovieFromFaId($this->format->integer($faid));
@@ -63,7 +63,7 @@ class Testing
         //retorna un message
         $faidint = $this->format->integer($faid);
         $setVerify = $this->repository->setVerify('fa', $faidint, $source2, $id2); //true o false
-        $setFromFaId = $this->mixmovies->setFromFaId('browse', $faid); //false o [status(updated o created), id]
+        $setFromFaId = $this->itemCreation->setFromFaId('browse', $faid); //false o [status(updated o created), id]
         if ($setVerify == true) $setVerifyMessage = 'Se inserta correctamente en Verified'; 
         else $setVerifyMessage = "Error. Ya existía en Verified";
         if ($setFromFaId == false) return "$faidint : $setVerifyMessage . No se actualiza en Movie porque devuelve error";

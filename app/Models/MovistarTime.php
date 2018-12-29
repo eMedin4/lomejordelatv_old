@@ -53,11 +53,19 @@ class MovistarTime extends Model
         } 
 	}
 
-	public function getSortCoeficientAttribute()
+	public function getExcerpt200Attribute()
 	{
-		return $this->movie->fa_popularity['step1'] * $this->day_parting['coeficient'];
+		return $this->movie->excerpt200;
 	}
 
-	
-	
+	public function getExcerpt400Attribute()
+	{
+		return $this->movie->excerpt400;
+	}
+
+	public function getScoreAttribute()
+	{
+		return $this->movie->score;
+	}
+
 }

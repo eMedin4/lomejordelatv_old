@@ -29,3 +29,25 @@
         z-index: 8888;
     }
 }
+
+.type-link {
+    display: block;
+    padding: 6px 0px;
+    border-radius: 3px;
+    color: #d9e1e8;
+    letter-spacing: 0;
+    font-weight: 400;
+    &.active {
+        color: #84a3ff;
+        font-weight: 500;
+        color: #fff;
+    }
+  }
+
+.break {
+    color: #868a92;
+    padding: 20px 0 8px;
+    display: block;
+    font-weight: 500;
+}
+

@@ -7,11 +7,11 @@
 */
 return [
 
-    /* 'channels'  => [ 
-        'CPCOLE' => 'Movistar Drama',
-    ], */
+     /*'channels'  => [ 
+        'MV3' => 'Canal #0',
+     ], */
 
-    'channels'  => [ 
+     'channels'  => [ 
         'TVE' => 'La 1',
         'LA2' => 'La 2',
         'C4' => 'Cuatro',
@@ -45,7 +45,24 @@ return [
     ],
 
     'moviesTvBan' => [
-        'Destinos de película', 'Días de cine', 'Hollywood y política', 'Entrevista Bafta', 'Estreno en salas', 'Pool Fiction', 'Cuadernos de rodaje', 'Gui en Hollywood', 'Night Shyamalan', 'Informe cine', 'The Comedian\'s Guide', 'Huellas en la nieve', 'Selección TCM', 'Producción TCM', 'The Enfield Haunting'
+        'Destinos de película', 
+        'Días de cine', 
+        'Hollywood y política', 
+        'Entrevista Bafta', 
+        'Estreno en salas', 
+        'Pool Fiction', 
+        'Cuadernos de rodaje', 
+        'Gui en Hollywood', 
+        'Night Shyamalan', 
+        'Informe cine', 
+        'The Comedian\'s Guide', 
+        'Huellas en la nieve', 
+        'Selección TCM', 
+        'Producción TCM', 
+        'The Enfield Haunting',
+        'Taller',
+        'Simpson', //satura el query
+        'Big Bang', //satura el query
     ],
 
     'wordsTvBan' => [

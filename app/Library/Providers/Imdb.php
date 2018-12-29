@@ -22,7 +22,7 @@ class Imdb
         
         //Comprobamos si existe
 	    if (is_null($id)) {
-			$data['im_rat'] = $data['im_count'] = $data['im_popularity'] = $data['rt_rat'] = null;
+			$data['im_rat'] = $data['im_count'] = $data['rt_rat'] = null;
 			//$data['response'] = false;
 			$data['message'] = 'No hay id de tmdb para buscar en imdb';
 			return $data;
@@ -31,7 +31,7 @@ class Imdb
 		$imdb = Request::get('http://www.omdbapi.com/?i=' . urlencode($id) . '&plot=full&apikey=' . env('OMDB_API_KEY'));
 		
 		if ($imdb->body->Response == "False") {
-			$data['im_rat'] = $data['im_count'] = $data['im_popularity'] = $data['rt_rat'] = null;
+			$data['im_rat'] = $data['im_count'] = $data['rt_rat'] = null;
 			//$data['response'] = false;
 			$data['message'] = 'La busqueda en imdb devuelve error';
 			return $data;
@@ -44,10 +44,8 @@ class Imdb
         }
         if (isset($imdb->body->imdbVotes) && $imdb->body->imdbVotes != 'N/A') {
             $data['im_count'] = $this->format->integer($imdb->body->imdbVotes);
-            $data['im_popularity'] = $this->algorithm->popularity($year, $data['im_count'], 'im');
         } else {
             $data['im_count'] = null;
-            $data['im_popularity'] = null;
         }
 
 		if (empty($imdb->body->Ratings)) {

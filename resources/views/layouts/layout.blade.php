@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="{{ asset('/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" rel="stylesheet">
-
-
 </head>
 <body>
 	<div class="header">
@@ -20,8 +18,8 @@
                     <p>lomejordelatv</p>
                 </div>
                 <nav class="main-menu">
-                    <a href="{{route('tv')}}">Televisión</a>
-                    <a href="{{route('netflix')}}">Netflix</a>
+                    <a href="">Televisión</a>
+                    <a href="">Netflix</a>
                     <a href="">HBO</a>
                     <a href="">Amazon</a>
                     <a href="">Itunes</a>

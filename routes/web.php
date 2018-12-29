@@ -1,10 +1,33 @@
 <?php
 
-Route::get('/temporal', 'TemporalRepository@temporal3');
+//Route::redirect('/', '/películas-en-tv'); Esto es una redireccion 301 pero en local no funciona porque redirecciona a localhost/peliculas-en-tv. Comprobar en servidor
 
-Route::get('/', 'MovieController@tv')->name('tv');
-Route::get('/netflix', 'MovieController@netflix')->name('netflix');
+Route::get('/amazon', 'TestController@amazon');
+
+Route::get('/', function(){
+    return redirect()->route('tv', ['type' => 'peliculas', 'channel' => 'tv']);
+});
+
+Route::get('/{type}-{channel}/{time?}/{sort?}', 'MovieController@tv')
+    ->where([
+        'type' => 'series|peliculas',
+        'channel' => 'tv|tdt|canales-de-pago',
+        'time' => 'cualquier-momento|hoy|ahora|esta-noche|manana', 
+        'sort' => 'destacadas|populares|mejores'
+        ])
+    ->name('tv'); //hoy, ahora, esta-noche, mañana
+
+/*
+Route::get('/{type}-de-netflix', 'MovieController@netflix')->where(['type' => 'series|peliculas'])->name('netflix');
+Route::get('/mejores-{type}-de-netflix', 'MovieController@bestNetflix')->where(['type' => 'series|peliculas'])->name('bestNetflix');
+Route::get('/nuevas-{type}-de-netflix', 'MovieController@newNetflix')->where(['type' => 'series|peliculas'])->name('newNetflix');
+
+*/
+
 Route::get('/pelicula/{slug}', 'MovieController@show')->name('movie');
+
+
+
 
 
 /* ADMINISTRATION */

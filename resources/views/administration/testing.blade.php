@@ -72,7 +72,6 @@
                 @endif
             </div>
         </div>
-
         <!--API THEMOVIEDB-->
         <div class="card-wrap">
             <div class="card">
@@ -82,24 +81,32 @@
                         @foreach ($data['tm'] as $movie)
                             <div class="card-inner">
                                 <input type="radio" name="tm_id" value="{{$movie['tm_id']}}">
-                                <a class="id" href="https://www.themoviedb.org/movie/{{$movie['tm_id']}}">{{$movie['tm_id']}}</a>
+                                @if ($movie['tm_type'] == 'movie')
+                                    <a class="id" href="https://www.themoviedb.org/movie/{{$movie['tm_id']}}">{{$movie['tm_id']}}</a>
+                                @else
+                                    <a class="id" href="https://www.themoviedb.org/tv/{{$movie['tm_id']}}">{{$movie['tm_id']}}</a>
+                                @endif
                                 <span class="title">{{$movie['tm_title']}} <i>{{$movie['tm_original']}}</i></span>
                                 <span class="meta">{{$movie['tm_year']}}
-                                    @if ($movie['tm_countries'])
-                                        @foreach ($movie['tm_countries'] as $country)
-                                            {{$country->name}} 
-                                        @endforeach
+                                    @if ($movie['tm_type'] == 'movie')
+                                        @if ($movie['tm_countries'])
+                                            @foreach ($movie['tm_countries'] as $country)
+                                                {{$country->name}} 
+                                            @endforeach
+                                        @endif
                                     @endif
                                 </span>
-                                <span class="director">
-                                    @if ($movie['credits'])
-                                        @foreach ($movie['credits']->crew as $credit)
-                                            @if ($credit->department == 'Directing')
-                                                {{$credit->name}} 
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </span>                              
+                                @if ($movie['tm_type'] == 'movie')
+                                    <span class="director">
+                                        @if ($movie['credits'])
+                                            @foreach ($movie['credits']->crew as $credit)
+                                                @if ($credit->department == 'Directing')
+                                                    {{$credit->name}} 
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </span>    
+                                @endif                          
                                 <div>
                                     <img class="poster-tmdb" src="http://image.tmdb.org/t/p/w1280{{$movie['poster']}}">
                                     <img class="background-tmdb" src="http://image.tmdb.org/t/p/w1280{{$movie['background']}}">
