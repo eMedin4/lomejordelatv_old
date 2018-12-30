@@ -2,15 +2,7 @@
 
 @section('content')
 
-    <div class="headline">
-        <div class="main-wrap headline-wrap">
-            <div class="headline-content">
-                <h1>{{$contentOnPage['h1']}}</h1>
-                <p>{{$contentOnPage['text']}}</p>
-            </div>
-            <!-- imagen --><div class="imagen"></div>
-        </div>
-    </div>
+
 
 	<div class="main-layout">
 

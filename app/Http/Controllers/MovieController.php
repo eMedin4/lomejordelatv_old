@@ -62,8 +62,8 @@ class MovieController extends Controller
         $records_1 = $records->splice(0, 1)->first(); //1 elemento (sin colección)
         $records_2 = $records->splice(0, 1)->first(); //1 elemento (sin colección)
         $records_3 = $records->splice(0, 4); //4 elementos
-        $records_4 = $records->splice(0, 6); //8 elementos
-        $records_5 = $records->splice(0, 4); //4 elementos
+        $records_4 = $records->splice(0, 7); //7 elementos
+        $records_5 = $records->splice(0, 8); //8 elementos
         return compact('records_1', 'records_2', 'records_3', 'records_4', 'records_5');
     }
 

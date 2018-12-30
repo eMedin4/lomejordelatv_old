@@ -9,6 +9,7 @@
     font-weight: 500;
     font-size: 23px;
     position: relative;
+    display: none;
     span {
         position: relative;
         z-index: 9999;
@@ -30,24 +31,54 @@
     }
 }
 
-.type-link {
-    display: block;
-    padding: 6px 0px;
-    border-radius: 3px;
-    color: #d9e1e8;
-    letter-spacing: 0;
-    font-weight: 400;
-    &.active {
-        color: #84a3ff;
-        font-weight: 500;
-        color: #fff;
-    }
-  }
+.nav-filters {
 
-.break {
-    color: #868a92;
-    padding: 20px 0 8px;
-    display: block;
-    font-weight: 500;
+    li {
+        display: block;
+        padding: 2px 0px;
+        
+    }
+
+    .nav-title {
+        color: #a1b2f5;
+        padding: 20px 0 8px;
+        display: block;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 12px;
+    }
+    
+    img {
+        width: 16px;
+        display: none;
+    }
+    
+    a {
+        position: relative;
+        color: #949fa9;
+        padding: 2px 0 2px 20px;
+        display: inline-block;
+    
+        &.active {
+            color: #fff;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background: #949fa9;
+            top: 10px;
+            border-radius: 4px;
+        }
+
+        &.active:before {
+            background: #ffffff;
+        }
+    }
+
 }
+
 

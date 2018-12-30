@@ -1,12 +1,15 @@
+.header-group {
+    background: radial-gradient(1000px at 50% 0, #3c3f46, #202124, #202124);
+}
+
 .header {
-    padding: 25px 0;
+    padding: 20px 0;
 }
 
 .header-wrap {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
+    padding: 0 20px;
 }
 
 .header-wrap-left {
@@ -15,7 +18,7 @@
 }
 
 .title {
-    margin: 0 41px 0 10px;
+    margin: 0 18px 0 10px;
 
     .icon-tv {
         font-size: 20px;
@@ -37,25 +40,46 @@
 }
   
 .headline {
+
+    .headline-wrap {
+        position: relative;
+        max-width: 1180px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
     .headline-content {
-        padding: 25px 30px 15px;
-        border-radius: 3px;
+        padding: 60px 40px 80px;
+        max-width: 660px;
+
     }
+
     h1 {
-        display: inline-block;
-        font-size: 16px;
-        font-weight: 300;
-        line-height: 25px;
-        letter-spacing: 0px;
-        padding: 0;
-        margin: 0;
+        font-size: 66px;
+        line-height: 75px;
+        letter-spacing: 4px;
+        font-weight: 500;
+        padding: 0 0 20px;
     }
+
     p {
-        color: #a2a5ad;
-        display: inline-block;
-        margin-left: 12px;
+        font-size: 16px;
+        line-height: 30px;
         font-weight: 300;
     }
+
+    .headline-image {
+        position: absolute;
+        bottom: -90px;
+        right: 0;
+        width: 400px;
+    }
+}
+
+#svg_8, #svg_9 {
+    display: none;
 }
 
 

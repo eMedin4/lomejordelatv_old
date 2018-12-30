@@ -9,6 +9,7 @@ class ContentOnPage
     public function getPage($parameters)
     {
         $page = $parameters['type'] . '-' . $parameters['channel'] . '-' . $parameters['time']; 
+        //dd($parameters, $page);
         return [
             'h1' => $this->getH1($page),
             'text' => $this->getText($page),
@@ -19,7 +20,7 @@ class ContentOnPage
 	public function getH1($page)
 	{
         $values = [
-            'peliculas-tv-todas' => 'Películas TV',
+            'peliculas-tv-cualquier-momento' => 'Películas TV',
             'series-tv-todas' => 'Series TV',
             'peliculas-tdt-todas' => 'Películas TV recomendadas',
             'series-tdt-todas' => 'Series TV recomendadas',
@@ -39,7 +40,9 @@ class ContentOnPage
     public function getText($page)
 	{
         $values = [
-            'peliculas-tv-todas' => 'Todas las películas que emiten en televisión, ordenadas y clasificadas según su puntuación en IMDB y Filmaffinity.',
+            'peliculas-tv-cualquier-momento' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. 
+            Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, 
+            pretium quis, sem. Nulla consequat massa quis enim.',
             'series-tv-todas' => '',
             'peliculas-tdt-todas' => '',
             'series-tdt-todas' => '',
@@ -59,7 +62,7 @@ class ContentOnPage
     public function getSeo($page)
 	{
         $values = [
-            'peliculas-tv-todas' => '',
+            'peliculas-tv-cualquier-momento' => '',
             'series-tv-todas' => '',
             'peliculas-tdt-todas' => '',
             'series-tdt-todas' => '',
