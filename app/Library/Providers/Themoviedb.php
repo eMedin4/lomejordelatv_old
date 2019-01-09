@@ -361,5 +361,17 @@ class Themoviedb
 			}
 		});
 	}
+
+	public function setSeasons($id)
+	{
+		$response = $this->getShowData($id);
+		if (!$response['response']) {
+			$this->output->message( "tmdb: $id da error al responder el api al intentar descargar seasons", true, 'error');
+			return false;
+		}
+		return $response['tm_seasons'];
+
+	}
+
 	
 }

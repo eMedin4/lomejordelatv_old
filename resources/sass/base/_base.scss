@@ -1,9 +1,9 @@
 html {
-    font-size: 18px;
+    font-size: 16px;
+    line-height: 1.5;
     box-sizing: border-box;
 }
   
-
 *, *:before, *:after {
     box-sizing: inherit;
 }
@@ -11,16 +11,9 @@ html {
 body {
     font-family: $body-font;
     font-style: normal;
-    font-weight: $normal-weight;
-    color: $front-color;
-    font-size: 16px;
-    line-height: 24px;
-    background: $background-color;
-}
-
-.main-wrap {
-    max-width: 1680px;
-    @include center-auto();
+    font-weight: 300;
+    color: $white-dark-color;
+    background: $base-color;
 }
 
 img {

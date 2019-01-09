@@ -1,44 +1,38 @@
 
 h1, .h1 {
     font-size: 60px;
-    font-weight: $normal-weight;
-    line-height: 66px;
+    font-weight: 400;
     letter-spacing: -2px;
-    padding: 0 25px 12px;
+    padding-bottom: 0;
     margin-left: -3px;
-    color: $heading-color;
+    color: $white-color;
   }
   
    h2, .h2 {
     font-size: 32px;
-    font-weight: $normal-weight;
-    line-height: 36px;
-    padding: 25px 25px 10px;
+    font-weight: 400;
+    padding-bottom: 0;
     margin-left: -1px;
-    color: $heading-color;
+    color: $white-color;
    }
   
    h3, .h3 {
-    font-size: 24px;
-    font-weight: $normal-weight;
-    line-height: 30px;
-    padding: 20px 25px 8px;
-    color: $heading-color;
+    font-size: 20px;
+    font-weight: 400;
+    padding-bottom: 0;
+    color: $white-color;
    }
   
    h4, .h4 {
     font-size: 16px;
-    font-weight: $normal-weight;
-    line-height: 22px;
-    padding: 20px 25px 0;
-    color: $heading-color;
+    font-weight: 400;
+    color: $white-color;
    }
   
    h5, .h5 {
     font-size: 15px;
-    font-weight: $normal-weight;
-    color: $heading-color;
-    padding: 0 25px 6px;
+    font-weight: 400;
+    color: $white-color;
    }
   
 
@@ -86,3 +80,10 @@ Icomoon
     content: "\e95b";
   }
   
+  .icon-flickr2:before {
+    content: "\eaa4";
+  }
+
+  .icon-podcast:before {
+    content: "\e91c";
+  }

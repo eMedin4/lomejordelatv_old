@@ -54,6 +54,9 @@ class ItemRepository {
         //Guardamos en la tabla movies
         $movie->save();
 
+        //Si es serie guardamos en la tabla seasons
+        if ($data['fa_type'] == 'show') $this->processSeasons($movie->id, $data['tm_seasons']);
+
         //Guardamos en las tablas credits y pivote si existen
         if (array_key_exists('credits', $data)) $this->processCredits($movie, $data);
 
@@ -111,9 +114,6 @@ class ItemRepository {
     {
         $movie->last_year = $data['tm_last_year'];
         $movie->seasons = $data['tm_number_of_seasons'];
-
-        //guardamos en tabla season
-        $this->processSeasons($movie->id, $movie->seasons);
     }
 
 

@@ -5,69 +5,60 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\MovieRepository;
-use App\Library\ContentOnPage;
-use Carbon\Carbon;
+
 
 class MovieController extends Controller
 {
 
     private $movieRepository;
 
-	public function __Construct(MovieRepository $movieRepository, ContentOnPage $contentOnPage)
+	public function __Construct(MovieRepository $movieRepository)
 	{
         $this->movieRepository = $movieRepository;
-        $this->contentOnPage = $contentOnPage;
 	}
     
     public function tv($type, $channel, $time = 'cualquier-momento', $sort = 'destacadas')
     {
         $records = $this->movieRepository->getMovistar($type, $channel, $time, $sort);
-        if ($records->isEmpty()) return view('empty');
-        $records = $this->formatRecords($records);
         $parameters = ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => $sort];
-        $contentOnPage = $this->contentOnPage->getPage($parameters);
-        return view('main', compact(['parameters', 'contentOnPage', 'records']));
+        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
+        return view('main', compact(['parameters', 'records']));
     }
 
 
-    public function netflix($type)
+    public function netflix($type, $time = 'todas', $sort = 'destacadas', $fromyear = null, $toyear = null)
     {
-        if ($type == 'peliculas') $type = 'movie';
-        $records = $this->movieRepository->getNetflix($type);
-        if ($records->isEmpty()) return view('empty');
-        $records = $this->formatRecords($records);
-        return view('main', compact(['type', 'records']));
+        $records = $this->movieRepository->getNetflix($type, $time, $sort, $fromyear, $toyear);
+        $parameters = ['type' => $type, 'channel' => 'netflix', 'time' => $time, 'sort' => $sort, 'fromYear' => $fromyear, 'toYear' => $toyear];
+        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
+        return view('main', compact(['parameters', 'records']));
     }
 
-    public function bestNetflix($type)
+    public function amazon($type, $sort = 'destacadas')
     {
-        if ($type == 'peliculas') $type = 'movie';
-        $records = $this->movieRepository->getNetflix($type, 'best');
-        if ($records->isEmpty()) return view('empty');
-        $records = $this->formatRecords($records);
-        return view('main', compact(['type', 'records']));
+        $records = $this->movieRepository->getAmazon($type, $sort);
+        //$parameters = ['type' => $type, 'channel' => 'netflix', 'sort' => $sort];
+        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
+        return view('main', compact(['records']));
     }
 
-    public function newNetflix($type)
+    public function hbo($type, $sort = 'destacadas')
     {
-        if ($type == 'peliculas') $type = 'movie';
-        $records = $this->movieRepository->getNetflix($type, 'new');
-        if ($records->isEmpty()) return view('empty');
-        $records = $this->formatRecords($records);
-        return view('main', compact(['type', 'records']));
+        $records = $this->movieRepository->getHbo($type, $sort);
+        //$parameters = ['type' => $type, 'channel' => 'netflix', 'time' => $time, 'sort' => $sort, 'fromYear' => $fromyear, 'toYear' => $toyear];
+        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
+        return view('main', compact(['records']));
     }
 
-    public function formatRecords($records)
+
+
+    public function processFiltersYearForm(Request $request, $type, $channel, $time = 'todas', $sort = 'destacadas')
     {
-        $records_1 = $records->splice(0, 1)->first(); //1 elemento (sin colección)
-        $records_2 = $records->splice(0, 1)->first(); //1 elemento (sin colección)
-        $records_3 = $records->splice(0, 4); //4 elementos
-        $records_4 = $records->splice(0, 7); //7 elementos
-        $records_5 = $records->splice(0, 8); //8 elementos
-        return compact('records_1', 'records_2', 'records_3', 'records_4', 'records_5');
+        //dd($type, $channel, $time, $sort, $request->all());
+        $fromYear = $request->input('from-year');
+        $toYear = $request->input('to-year');
+        return redirect($type.'-'.$channel.'/'.$time.'/'.$sort.'/'.$fromYear.'/'.$toYear);
     }
-
-
 
 
     public function show($slug)

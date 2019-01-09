@@ -32,12 +32,38 @@ class MovistarTime extends Model
 
 	public function getFormatTimeAttribute()
     {
-    	if ($this->time < $this->now) {
-    		return '<time class="tv-alert"><span>En emisión</span>Hace ' . $this->time->diffInMinutes($this->now) . '<span> m.</span></time>';
-    	} elseif ($this->time->isToday()) {
-    		return '<time>Hoy a las ' . $this->time->format('G:i') . '</time>';
-    	} else {
-    		return '<time>' . $this->time->format('G:i') . ' <span>' . $this->time->formatLocalized('%a') . '</span></time>';
+		$now = Carbon::now();
+		$nowTime = $now->format('H:i:s');
+
+		//En emisión
+		if ($this->time < $now) return '<time><span class="time-alert">En emisión</span>' . $this->time->format('G:i') . '<span></span></time>';
+
+		//Si ahora es la madrugada
+		if ($nowTime >= '00:00:00' && $nowTime < '08:00:00') {
+			if ($this->time->isToday()) {
+				return '<time>' . $this->time->format('G:i') . ' <span>hoy ' . $this->time->formatLocalized('%a') . '</span></time>';
+			} else {
+				return '<time>' . $this->time->format('G:i') . ' <span>' . $this->time->formatLocalized('%a') . '</span></time>';
+			}
+		}
+
+		//Si ahora es el dia 
+		if ($nowTime >= '08:00:00' && $nowTime < '20:00:00') {
+			if ($this->time->isToday()) {
+				return '<time>' . $this->time->format('G:i') . ' <span>esta noche</span></time>';
+			} else {
+				return '<time>' . $this->time->format('G:i') . ' <span>' . $this->time->formatLocalized('%a') . '</span></time>';
+			}
+		}
+
+		//Si ahora es la noche
+		if ($nowTime >= '20:00:00' && $nowTime < '00:00:00') {
+			//Si la pelicula empieza entre ahora  y las 02:00 de esta noche
+			if ($this->time->between($now, Carbon::now()->addDay()->setTime(2,0,0))) {
+				return '<time>' . $this->time->format('G:i') . ' <span>esta noche</span></time>';
+			} else {
+				return '<time>' . $this->time->format('G:i') . ' <span>' . $this->time->formatLocalized('%a') . '</span></time>';
+			}
 		}
 	}
 

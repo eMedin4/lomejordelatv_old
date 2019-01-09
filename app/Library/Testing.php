@@ -2,7 +2,7 @@
 namespace App\Library;
 
 use Goutte\Client;
-use App\Library\Repository;
+use App\Library\GenericRepository;
 use App\Library\Output;
 use App\Library\Format;
 use App\Library\Providers\FilmAffinity;
@@ -13,7 +13,7 @@ Use App\Library\ItemCreation;
 class Testing
 {
 
-    private $repository;
+    private $genericRepository;
 	private $output;
 	private $filmaffinity;
     private $themoviedb;
@@ -21,9 +21,9 @@ class Testing
     private $images;
     private $itemCreation;
 
-    public function __Construct(Repository $repository, Output $output, Filmaffinity $filmaffinity, Themoviedb $themoviedb, Format $format, Images $images, ItemCreation $itemCreation)
+    public function __Construct(GenericRepository $genericRepository, Output $output, Filmaffinity $filmaffinity, Themoviedb $themoviedb, Format $format, Images $images, ItemCreation $itemCreation)
 	{
-		$this->repository = $repository;
+		$this->genericRepository = $genericRepository;
 		$this->output = $output;
 		$this->filmaffinity = $filmaffinity;
         $this->themoviedb = $themoviedb;
@@ -35,7 +35,7 @@ class Testing
     public function faTmTest($faid, $withDetails, $more)
     {
         //Datos de mi db
-        $dbData = $this->repository->getMovieFromFaId($this->format->integer($faid));
+        $dbData = $this->genericRepository->getMovieFromFaId($this->format->integer($faid));
         //scraper fa
         $url = 'https://www.filmaffinity.com/es/' . $faid . '.html';
         $client = new Client();
@@ -62,13 +62,11 @@ class Testing
     {
         //retorna un message
         $faidint = $this->format->integer($faid);
-        $setVerify = $this->repository->setVerify('fa', $faidint, $source2, $id2); //true o false
-        $setFromFaId = $this->itemCreation->setFromFaId('browse', $faid); //false o [status(updated o created), id]
+        $setVerify = $this->genericRepository->setVerify('fa', $faidint, $source2, $id2); //true o false
+        $setFromFaId = $this->itemCreation->runId($faid); //false o [status(updated o created), id]
         if ($setVerify == true) $setVerifyMessage = 'Se inserta correctamente en Verified'; 
         else $setVerifyMessage = "Error. Ya existía en Verified";
         if ($setFromFaId == false) return "$faidint : $setVerifyMessage . No se actualiza en Movie porque devuelve error";
-        if ($setFromFaId['status'] == 'updated') return "$faidint : $setVerifyMessage . Ya existía en Movie, se actualiza ok";
-        if ($setFromFaId['status'] == 'created') return "$faidint : $setVerifyMessage . Ya existía en Movie, se actualiza ok";
-        return "Hay algún error";
+        return "film$faid => tmdb$id2 . Almacenada ok en tabla movies";
     }
 }

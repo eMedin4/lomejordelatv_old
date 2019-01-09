@@ -250,6 +250,11 @@ small {
     margin-right: 2px;
 }
 
+.card .metatype {
+    background: #c9e2ff;
+    padding: 0 2px;
+}
+
 .card-inner {
     padding-bottom: 10px;
     border-bottom: 1px solid #e8edf1;

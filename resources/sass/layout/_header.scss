@@ -1,24 +1,42 @@
-.header-group {
-    background: radial-gradient(1000px at 50% 0, #3c3f46, #202124, #202124);
+.main-header-wrap {
+    position: relative; //para el icono background
+    background: radial-gradient(1000px at 50% 0, $base-dark-color, $base-light-color, $base-light-color);
 }
 
-.header {
-    padding: 20px 0;
+.topbar {
+    padding: 25px 0;
+    position: relative;
 }
 
-.header-wrap {
+.topbar-inner {
     display: flex;
     align-items: center;
     padding: 0 20px;
+
+    @include mq('tablet-wide') {
+        padding-right: 0;
+    }
 }
 
-.header-wrap-left {
+.topbar-main {
     display: flex;
     align-items: center;
 }
 
-.title {
-    margin: 0 18px 0 10px;
+.topbar-nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+
+    margin: 0 18px 6px 10px;
+    color: #fff;
+
+    @include mq('tablet-wide') {
+        margin-bottom: 0;
+    }
 
     .icon-tv {
         font-size: 20px;
@@ -28,61 +46,113 @@
     }
 
     p {
-        display: inline-block;
-        text-align: center;
-        line-height: 38px;
-        font-weight: 900;
-        color: #fff;
+        font-family: $alt-font;
         font-size: 22px;
-        font-family: 'Roboto Slab', serif;
         letter-spacing: .5px;
+        display: inline-block;
+        font-weight: 900;
+
+        @include mq('tablet-wide') {
+            display: none;
+        }
     }
 }
-  
-.headline {
 
-    .headline-wrap {
-        position: relative;
-        max-width: 1180px;
-        height: 300px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+.main-nav,
+.aux-nav {
+
+    li {
+        display: inline-block;
+        margin-left: 20px;
+
+        @include mq('tablet-wide') {
+            margin-left: 0;
+        }
     }
 
-    .headline-content {
-        padding: 60px 40px 80px;
-        max-width: 660px;
-
-    }
-
-    h1 {
-        font-size: 66px;
-        line-height: 75px;
-        letter-spacing: 4px;
+    a {
+        color: #d9e1e8;
+        padding: 10px;
         font-weight: 500;
-        padding: 0 0 20px;
-    }
-
-    p {
-        font-size: 16px;
-        line-height: 30px;
-        font-weight: 300;
-    }
-
-    .headline-image {
-        position: absolute;
-        bottom: -90px;
-        right: 0;
-        width: 400px;
+        letter-spacing: 1px;
     }
 }
 
-#svg_8, #svg_9 {
+.aux-nav {
+    @include mq('tablet-wide') {
+        display: none;
+    }
+}
+
+
+.intro {
+    overflow: hidden;
+    position: relative;
+}
+
+.intro-content {
+    @include center-auto;
+    max-width: 1100px;
+    text-align: center;
+    padding: 60px 0;
+    position: relative;
+    z-index: 100; // para sobreponer al icono de fondo
+
+    @include mq('tablet-wide') {
+        padding: 0;
+    }
+}
+
+.intro-content h1 {
+    font-size: 66px;
+    font-weight: 500;
+    padding-bottom: 20px;
+
+    @include mq('tablet-wide') {
+        font-size: 26px;
+    }
+}
+
+.intro-content p {
+    font-size: 18px;
+
+    @include mq('tablet-wide') {
+        display: none;
+    }
+}
+
+.icon-tv-background {
+    @include absolute-position(auto, 0, -680px, auto);
+    font-size: 1000px;
+    transform: rotate(-10deg);
+    color: $base-dark-color;  
+
+    @include mq('tablet-wide') {
+        display: none;
+    }
+}
+
+.scroll {
+
+    white-space: nowrap; /* [1] */
+    overflow-x: auto; /* [2] */
+    -webkit-overflow-scrolling: touch; /* [3] */
+    -ms-overflow-style: -ms-autohiding-scrollbar; /* [4] */ }
+  
+  /* [5] */
+  .scroll::-webkit-scrollbar {
+    display: none; }
+
+.scroll-fade {
     display: none;
+
+    @include mq('tablet-wide') {
+        display: block;
+        @include absolute-position(0, 0, 0, auto);
+        width: 50px;
+        background: linear-gradient(to right, rgba(255,0,0,0), $base-color);
+    }
 }
 
 
-  
-  
-  
+

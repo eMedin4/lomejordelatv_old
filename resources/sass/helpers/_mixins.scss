@@ -1,3 +1,5 @@
+//Se añaden con @include numbredelmixin(parametros)
+
 // Centramos algo sin preocuparnos de márgenes arriba y abajo
 @mixin center-auto {
     margin: { 
@@ -6,3 +8,46 @@
     }
 }
 
+// POSICION
+// uso: @include absolute-position(100px, 100px, auto, auto);
+@mixin absolute-position ($top, $right, $bottom, $left) {
+    position: absolute; 
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+ }
+
+// ELEMENTOS AFTER Y BEFORE
+// uso: @include pseudo;
+ @mixin pseudo($display: block, $pos: absolute, $content: ''){
+    content: $content;
+    display: $display;
+    position: $pos;
+}
+
+// MEDIA QUERIES
+// uso: @include mq('tablet-wide') { ... }
+// https://www.creativebloq.com/how-to/how-to-structure-media-queries-in-sass
+
+$breakpoints: (
+    "phone":        400px,
+    "phone-wide":   480px,
+    "phablet":      560px,
+    "tablet-small": 640px,
+    "tablet":       768px,
+    "tablet-wide":  1024px,
+    "desktop":      1248px,
+    "desktop-wide": 1440px
+);
+@mixin mq($width, $type: max) {
+    @if map_has_key($breakpoints, $width) {
+        $width: map_get($breakpoints, $width);
+        @if $type == max {
+            $width: $width - 1px;
+        }
+        @media only screen and (#{$type}-width: $width) {
+            @content;
+        }
+    }
+}

@@ -1,0 +1,34 @@
+button:focus,
+select:focus {
+    outline:0;
+}
+
+.filters-year-form {
+
+    select {
+        background: #0000;
+        color: #949fa9;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        border-bottom: 1px dashed #646977;
+        padding-bottom: 5px;
+    }
+
+    &.active select {
+        color: #fff;
+    }
+
+    .break {
+        color: #646977;
+    }
+
+    button {
+        background: #43464e;
+        border: none;
+        color: #fff;
+        padding: 7px 7px;
+        border-radius: 4px;
+        margin-left: 7px;
+    }
+}

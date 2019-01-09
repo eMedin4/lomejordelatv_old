@@ -13,9 +13,37 @@ Route::get('/{type}-{channel}/{time?}/{sort?}', 'MovieController@tv')
         'type' => 'series|peliculas',
         'channel' => 'tv|tdt|canales-de-pago',
         'time' => 'cualquier-momento|hoy|ahora|esta-noche|manana', 
-        'sort' => 'destacadas|populares|mejores'
+        'sort' => 'destacadas|populares|mejores',
         ])
-    ->name('tv'); //hoy, ahora, esta-noche, mañana
+    ->name('tv');
+
+
+Route::get('/{type}-netflix/{time?}/{sort?}', 'MovieController@netflix')
+    ->where([
+        'type' => 'series|peliculas',
+        'time' => 'todas|nuevas|expiran', 
+        'sort' => 'destacadas|populares|mejores',
+        ])
+    ->name('netflix');
+
+Route::get('/amazon-{type}/{sort?}/', 'MovieController@amazon')
+    ->where([
+        'type' => 'series|peliculas',
+        'sort' => 'destacadas|populares|mejores',
+        ])
+    ->name('amazon');
+
+Route::get('/hbo-{type}/{sort?}', 'MovieController@hbo')
+    ->where([
+        'type' => 'series|peliculas',
+        'sort' => 'destacadas|populares|mejores',
+        ])
+    ->name('hbo');
+
+Route::post('/processFiltersYearForm/{type}/{channel}/{time?}/{sort?}', 'MovieController@processFiltersYearForm')->name('processFiltersYearForm');
+
+
+
 
 /*
 Route::get('/{type}-de-netflix', 'MovieController@netflix')->where(['type' => 'series|peliculas'])->name('netflix');
@@ -37,6 +65,10 @@ Route::group([
     'namespace' => 'Administration',
     'prefix' => 'administration'
 ], function() {
+    Route::get('testnetflix/{page}', 'Dashboard@testNetflix')->name('testNetflix');
+
+
+
     Route::get('/', 'Dashboard@show')->name('dashboard');
     Route::get('/clearCustomErrorsLog', 'Dashboard@clearCustomErrorsLog')->name('clearCustomErrorsLog');
     Route::get('/clearCustomMoviesLog', 'Dashboard@clearCustomMoviesLog')->name('clearCustomMoviesLog');
@@ -45,7 +77,7 @@ Route::group([
     Route::get('/setfrommultiids', 'Dashboard@setFromMultiIds')->name('setFromMultiIds');
     Route::get('/netflix', 'Dashboard@netflix')->name('setNetflix');
     Route::get('/movistar', 'Dashboard@setMovistar')->name('setMovistar');
-    Route::get('/amazon', 'amazonScraper@movies')->name('amazon');
+    Route::get('/amazon', 'amazonScraper@movies');
     Route::get('/testing', 'Dashboard@testing')->name('testing');
 });
 

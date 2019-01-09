@@ -3,26 +3,29 @@ namespace App\Library\Providers;
 
 use Goutte\Client;
 use Carbon\Carbon;
-use App\Library\Repository;
+use App\Library\GenericRepository;
+use App\Library\MovistarRepository;
 use App\Library\Output;
 use App\Models\MovistarLog;
 
 class Movistar
 {
 
-    private $repository;
+    private $genericRepository;
+    private $movistarRepository;
     private $output;
 
-    public function __Construct(Repository $repository, Output $output)
+    public function __Construct(GenericRepository $genericRepository, MovistarRepository $movistarRepository, Output $output)
 	{
-        $this->repository = $repository;
+        $this->genericRepository = $genericRepository;
+        $this->movistarRepository = $movistarRepository;
         $this->output = $output;
     }
 
     public function getMovies()
     {
         //borramos times ya pasados
-        $this->repository->resetMovistar();
+        $this->movistarRepository->resetMovistar();
         $this->output->message('Borrada programación antigua', false);
 
         $client = new Client();
@@ -46,7 +49,7 @@ class Movistar
                 $this->output->message("ok", false);
             }
             $this->output->message("Finalizada fecha $dayToScrap", true);
-            $this->repository->setParam('Movistar', Null, $dayToScrap);
+            $this->genericRepository->setParam('Movistar', Null, $dayToScrap);
         }
     }
 
@@ -96,18 +99,18 @@ class Movistar
             }
             
             //BUSCAMOS 1 COINCIDENCIA POR TITULO EXACTO
-            $movie = $this->repository->searchByExactTitle($title, $type);
+            $movie = $this->genericRepository->searchByExactTitle($title, $type);
             if ($movie) {
                 MovistarLog::create(['movistar_title' => $title, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada sin entrar (por title único) ']);
-                $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
+                $this->movistarRepository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
                 return;
             } 
 
             //BUSCAMOS 1 COINCIDENCIA POR SLUG
-            $movie = $this->repository->searchByExactSlug($title, $type);
+            $movie = $this->genericRepository->searchByExactSlug($title, $type);
             if ($movie) {
                 MovistarLog::create(['movistar_title' => $title, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada sin entrar (por slug único) ']);
-                $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
+                $this->movistarRepository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
                 return;
             } 
 
@@ -144,11 +147,11 @@ class Movistar
                 $original = $this->getElementIfExist($page, '.title-especial p', NULL);
     
                 //BUSCAMOS CON LOS DATOS
-                $movie = $this->repository->searchFromMovistarByDetails($title, $original, $year, $minutes);
+                $movie = $this->movistarRepository->searchFromMovistarByDetails($title, $original, $year, $minutes);
     
                 if ($movie) {
                     MovistarLog::create(['movistar_title' => $title, 'movistar_original' => $original, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada entrando, por detalles: ']);
-                    $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
+                    $this->movistarRepository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
                     return;
                 }
 
@@ -160,10 +163,10 @@ class Movistar
                 $splitTitle = preg_split("/[()]+/", $title, -1, PREG_SPLIT_NO_EMPTY);
                 if (count($splitTitle) > 1) {
                     $title = $splitTitle[1] . ' ' . $splitTitle[0];
-                    $movie = $this->repository->searchByExactSlug($title, $type);
+                    $movie = $this->genericRepository->searchByExactSlug($title, $type);
                     if ($movie) {
                         MovistarLog::create(['movistar_title' => $title, 'fa_title' => $movie->title, 'fa_original' => $movie->original_title, 'datetime' => $datetime, 'channel' => $channel, 'valid' => 1, 'comment' => 'Encontrada sin entrar (por slug único dando la vuelta a parentesis) ']);
-                        $this->repository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
+                        $this->movistarRepository->setMovistar($movie->id, $movie->popularity, $datetime, $channelCode, $channel, $type, $season, $episode);
                         return;
                     } 
                 }
@@ -178,7 +181,7 @@ class Movistar
     public function daysToScrap()
     {
         //compara la fecha del último scraper con la actual y devuelve un array con las fechas que hay que scrapear
-        $lastDayScraped = $this->repository->getParam('Movistar', 'date');
+        $lastDayScraped = $this->genericRepository->getParam('Movistar', 'date');
         $lastDayScraped = $lastDayScraped->format('Y-m-d');
         $today = Carbon::now()->toDateString();
         $tomorrow = Carbon::now()->addDay()->toDateString();

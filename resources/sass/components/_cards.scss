@@ -1,30 +1,294 @@
-.card {
-    position: relative;
-    margin-bottom: 30px;
+.card-wrap {
+    padding: 20px;
 }
 
-.card-2-wrap {
+.card-group {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     margin: 0 -15px;
 }
 
-.card-2 {
+.card-wrap-1 {
+
+}
+
+.card-wrap-2 {
     flex-basis: 50%;
     padding: 0 15px;
 }
 
-.card-2 .popularity-tag {
-    display: none;
+.card-wrap-3 {
+
+}
+
+.card-wrap-4 {
+
+}
+
+.card-wrap-5 {
+
+}
+
+.card {
+    background: $base-color;
+    border-radius: 8px;
+    padding-bottom: 12px;
+
+    a {
+
+        &:hover img {
+            transform: scale(1.05);
+        }
+
+    }
+
+}
+
+.card-meta {
+    position: relative;
+
+    img {
+        border-radius: 8px 8px 0px 0;
+        transition: all .5s;
+        vertical-align: middle;
+    }
+}
+
+.card-tags {
+    font-size: 14px;
+    font-weight: 500;
+
+    li {
+        display: inline-block;
+        border-radius: 4px;
+        letter-spacing: -.3px;
+        margin-left: 6px;
+    }
+}
+
+.score-value {
+    i {
+        font-style: normal;
+    }
 }
 
 
-.card-inner {
-    background: $primary-card-color;
+.country {
+    display: inline-block;
+    height: 13px;
+    background-image: url("../images/flags.png"); 
+    background-repeat: no-repeat;
+    position: relative;
+    top: 1px;
+    border-radius: 3px;
+}
+
+.card-provider-fa {
+    color: #9cc4e6;
+}
+
+.card-provider-im {
+    color: #ffd745;
+}
+
+.tag {
+
+    &.hot {
+        background: #ff0b42bb;
+        color: #f8ffff;
+    }
+
+    &.new {
+        background: #3165ffbb;
+        color: #f8ffff;
+    }
+}
+
+.card-title {
+    padding: 25px 20px 4px;
+    font-size: 18px;
+}
+
+.grid-item-x .card-title {
+    font-size: 28px;
+}
+
+.card-extra {
+    padding: 0 15px 5px;
+}
+
+.card-excerpt {
+
+}
+
+.card-program {
+    font-weight: 400;
+    padding-top: 8px;
+    color: #b8bed2;
+
+    .dropdown {
+        display: none;
+    }
+
+    .dropdown-btn {
+        display: inline-block;
+        border-radius: 8px;
+        padding: 3px 10px;
+        background: #2c2d31;
+        margin: 4px 0 0 -6px;
+        cursor: pointer;
+        transition: background .3 ease;
+
+        &:hover {
+            background: #37383e;
+        }
+    }
+}
+
+.card-program-item {
+    display: flex;
+}
+
+.card-program-item-main {
+    padding-bottom: 2px;
+
+    > span {
+        color: #8c9ec3;
+        margin-left: 9px;
+    }
+    
+    time {
+
+    }
+}
+
+.time-alert {
+    position: relative;
+    color: #ff3981;
+    margin: 0 12px 0 18px;
+
+    &:before {
+        @include pseudo;
+        left: -18px;
+        top: 4px;
+        border-radius: 6px;
+        width: 12px;
+        height: 12px;
+        background: #ff3981;
+        border: 2px solid #6f2330;
+        animation: blink 1.5s steps(1) infinite;
+    }
+}
+
+@keyframes blink { 50% { background: transparent; border-color: transparent; } }
+
+.card-program-item-season {
+    color: #ffac82;
+    margin-left: 12px;
+
+    span {
+
+    }
+}
+
+.thumb {
+    overflow: hidden;
+}
+
+.no-thumb {
+    background: #28292d;
+    border-radius: 8px 8px 0 0;
+}
+
+.poster img {
+    width: 25%;
+    position: absolute;
+    bottom: -10px;
     border-radius: 4px;
+    box-shadow: 0 0 1px 1px #202124;
+    left: 20px;
 }
 
-.card img {
-    border-radius: 4px 4px 0px 0;
+.no-thumb .poster img {
+    position: relative;
 }
+
+.country-andorra { background-position: -3px -3px; width: 19px; margin: 0 3px 0 0; }
+.country-emiratos-arabes { background-position: -3px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-armenia { background-position: -3px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-argentina { background-position: -3px -70px; width: 19px; margin: 0 3px 0 0; }
+.country-austria { background-position: -3px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-australia { background-position: -3px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-belgica { background-position: -3px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-burkina-faso { background-position: -3px -138px; width: 19px; margin: 0 3px 0 0; }
+.country-bulgaria { background-position: -3px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-bolivia { background-position: -3px -171px; width: 19px; margin: 0 3px 0 0; }
+.country-brasil { background-position: -25px -3px; width: 19px; margin: 0 3px 0 0; }
+.country-canada { background-position: -25px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-republica-del-congo { background-position: -25px -37px; width: 19px; margin: 0 3px 0 0; }
+.country-suiza { background-position: -25px -70px; width: 19px; margin: 0 3px 0 0; }
+.country-chile { background-position: -25px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-china { background-position: -25px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-colombia { background-position: -25px -138px; width: 19px; margin: 0 3px 0 0; }
+.country-republica-checa { background-position: -25px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-alemania { background-position: -25px -171px; width: 19px; margin: 0 3px 0 0; }
+.country-dinamarca { background-position: -47px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-argelia { background-position: -47px -37px; width: 19px; margin: 0 3px 0 0; }
+.country-estonia { background-position: -47px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-egipto { background-position: -47px -70px; width: 19px; margin: 0 3px 0 0; }
+.country-espana { background-position: -47px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-finlandia { background-position: -47px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-francia { background-position: -47px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-reino-unido { background-position: -47px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-guatemala { background-position: -69px -3px; width: 19px; margin: 0 3px 0 0; }
+.country-honduras { background-position: -69px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-hungria { background-position: -69px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-indonesia { background-position: -69px -70px; width: 19px; margin: 0 3px 0 0; }
+.country-irlanda { background-position: -69px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-israel { background-position: -69px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-india { background-position: -69px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-irak { background-position: -69px -138px; width: 19px; margin: 0 3px 0 0; }
+.country-iran { background-position: -69px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-italia { background-position: -69px -171px; width: 19px; margin: 0 3px 0 0; }
+.country-jamaica { background-position: -91px -3px; width: 19px; margin: 0 3px 0 0; }
+.country-jordania { background-position: -91px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-japon { background-position: -91px -37px; width: 19px; margin: 0 3px 0 0; }
+.country-kirguistan { background-position: -91px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-corea-del-norte { background-position: -91px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-corea-del-sur { background-position: -91px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-kazajstan { background-position: -91px -138px; width: 19px; margin: 0 3px 0 0; }
+.country-libano { background-position: -91px -171px; width: 19px; margin: 0 3px 0 0; }
+.country-luxemburgo { background-position: -114px -37px; width: 19px; margin: 0 3px 0 0; }
+.country-letonia { background-position: -114px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-macedonia { background-position: -114px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-mali { background-position: -114px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-mexico { background-position: -114px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-nigeria { background-position: -136px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-nicaragua { background-position: -136px -37px; width: 19px; margin: 0 3px 0 0; }
+.country-paises-bajos-holanda { background-position: -136px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-noruega { background-position: -136px -70px; width: 19px; margin: 0 3px 0 0; }
+.country-panama { background-position: -136px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-peru { background-position: -136px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-paquistan { background-position: -136px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-polonia { background-position: -136px -171px; width: 19px; margin: 0 3px 0 0; }
+.country-portugal { background-position: -158px -3px; width: 19px; margin: 0 3px 0 0; }
+.country-paraguay { background-position: -158px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-rumania { background-position: -158px -53px; width: 19px; margin: 0 3px 0 0; }
+.country-rusia { background-position: -158px -70px; width: 19px; margin: 0 3px 0 0; }
+.country-ruanda { background-position: -158px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-arabia-saudi { background-position: -158px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-suecia { background-position: -158px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-singapur { background-position: -158px -138px; width: 19px; margin: 0 3px 0 0; }
+.country-senegal { background-position: -158px -171px; width: 19px; margin: 0 3px 0 0; }
+.country-el-salvador { background-position: -180px -20px; width: 19px; margin: 0 3px 0 0; }
+.country-chad { background-position: -180px -37px; width: 19px; margin: 0 3px 0 0; }
+.country-turquia { background-position: -180px -87px; width: 19px; margin: 0 3px 0 0; }
+.country-tanzania { background-position: -180px -104px; width: 19px; margin: 0 3px 0 0; }
+.country-ucrania { background-position: -180px -121px; width: 19px; margin: 0 3px 0 0; }
+.country-estados-unidos { background-position: -180px -138px; width: 19px; margin: 0 3px 0 0; }
+.country-venezuela { background-position: -180px -154px; width: 19px; margin: 0 3px 0 0; }
+.country-vietnam { background-position: -180px -3px; width: 19px; margin: 0 3px 0 0; }
+.country-yemen { background-position: -202px -3px; width: 19px; margin: 0 3px 0 0; }
+
+

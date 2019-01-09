@@ -2,7 +2,7 @@
 namespace App\Library;
 
 use Goutte\Client;
-use App\Library\Repository;
+use App\Library\GenericRepository;
 use App\Library\ItemRepository;
 use App\Library\Output;
 use App\Library\Providers\FilmAffinity;
@@ -12,16 +12,16 @@ use App\Library\Algorithm;
 class ItemCreation
 {
 
-    private $repository;
+    private $genericRepository;
     private $itemRepository;
 	private $output;
 	private $filmaffinity;
     private $themoviedb;
     private $algorithm;
 
-    public function __Construct(Repository $repository, ItemRepository $itemRepository, Output $output, Filmaffinity $filmaffinity, Themoviedb $themoviedb, Algorithm $algorithm)
+    public function __Construct(GenericRepository $genericRepository, ItemRepository $itemRepository, Output $output, Filmaffinity $filmaffinity, Themoviedb $themoviedb, Algorithm $algorithm)
 	{
-        $this->repository = $repository;
+        $this->genericRepository = $genericRepository;
 		$this->itemRepository = $itemRepository;
 		$this->output = $output;
 		$this->filmaffinity = $filmaffinity;
@@ -70,7 +70,7 @@ class ItemCreation
     {
         $client = new Client();
         $crawler = $this->requestUrl($client, "https://www.filmaffinity.com/es/$id.html");
-        $this->processItem($crawler);
+        return $this->processItem($crawler);
     }
 
 
@@ -123,8 +123,8 @@ class ItemCreation
         
         //Solo actualizamos si ya existe (a no ser que se especifique la opcion fullUpdate)
         if (!$fullUpdate) {
-            if ($this->repository->checkIfMovieExist($card['fa_id'])) {
-                $this->repository->update($card);
+            if ($this->genericRepository->checkIfMovieExist($card['fa_id'])) {
+                $this->genericRepository->update($card);
                 $this->output->message( $card['fa_title'] . " : Ya existe, la actualizamos", false);
                 return;
             }
@@ -136,20 +136,25 @@ class ItemCreation
         $this->output->message($card['fa_title'] . " : Entramos en la pagina de filmaffinity", false);
     }    
 
+    /*
+        processItem 
+        Funcion: Recopila datos de Fa y Tmdb de un item y almacenamos
+        Retorna: true o false
+    */
     public function processItem($crawler)
     {
 		//Scrapeamos fa
         $faData = $this->filmaffinity->getMovie($crawler);
         if ($faData['response'] == false) {
             $this->output->message($faData['message'], $faData['revision'], 'error');
-            return;
+            return false;
         }
 
         //datos de tmdb
         $tmData = $this->themoviedb->getMovie($faData);
         if ($tmData['response'] == false) {
             $this->output->message($tmData['message'], $tmData['log'], 'error');
-            return;
+            return false;
         } 
 
         //recopilamos toda la info
@@ -159,6 +164,7 @@ class ItemCreation
         //almacenamos y finalizamos
         $store = $this->itemRepository->run($fullData);
         $this->output->message($fullData['fa_title'] . " : Guardada ok en base de datos como " . $store['status'], false, 'comment'); 
+        return true;
     }
 
     public function requestUrl($client, $url)
@@ -170,6 +176,21 @@ class ItemCreation
         } 
         $this->output->message("Entramos en $url", false);
         return $crawler;
+    }
+
+    public function runSeasons($id, $tmId)
+    {
+        $response = $this->themoviedb->setSeasons($tmId);
+        if ($response) {
+            $this->itemRepository->processSeasons($id, $response);
+            $last = 0;
+            foreach ($response as $item) {
+                if ($item->season_number > $last) $last = $item->season_number;
+            }
+            return $last;
+        }
+        return false;
+        
     }
     
 }

@@ -21,9 +21,9 @@ class Movie extends Model
     	return $this->belongsToMany(Character::class)->withPivot('order');
 	}
 
-	public function movistarHistory()
+	public function seasonsTable()
 	{
-		return $this->hasMany(MovistarHistory::class);
+		return $this->hasMany(Season::class);
 	}
 
 	public function movistarTime()
@@ -34,57 +34,6 @@ class Movie extends Model
 	/* 
 		ACCESSORS
 	*/
-
-	public function getFaStarsAttribute()
-	{
-		return $this->stars($this->fa_rat);
-	}
-
-	public function getImStarsAttribute()
-	{
-		return $this->stars($this->im_rat);
-	}
-
-	public function getRtStarsAttribute()
-	{
-		return $this->stars($this->rt_rat / 10);
-	}
-
-	public function stars($value)
-	{
-		switch (true) {
-			case ($value >= 8): return '
-				<span class="icon-star-full star-5-color"></span>
-				<span class="icon-star-full star-5-color"></span>
-				<span class="icon-star-full star-5-color"></span>
-				<span class="icon-star-full star-5-color"></span>
-				<span class="icon-star-full star-5-color star-large"></span>';
-			case ($value >= 6.5): return '
-				<span class="icon-star-full star-4-color"></span>
-				<span class="icon-star-full star-4-color"></span>
-				<span class="icon-star-full star-4-color"></span>
-				<span class="icon-star-full star-4-color star-large"></span>
-				<span class="icon-star-full star-4-nocolor"></span>';
-            case ($value >= 5): return '
-				<span class="icon-star-full star-3-color"></span>
-				<span class="icon-star-full star-3-color"></span>
-				<span class="icon-star-full star-3-color"></span>
-				<span class="icon-star-full star-3-nocolor"></span>
-				<span class="icon-star-full star-3-nocolor"></span>';
-            case ($value >= 4): return '
-				<span class="icon-star-full star-2-color"></span>
-				<span class="icon-star-full star-2-color"></span>
-				<span class="icon-star-full star-2-nocolor"></span>
-				<span class="icon-star-full star-2-nocolor"></span>
-				<span class="icon-star-full star-2-nocolor"></span>';
-            default: return '
-				<span class="icon-star-full star-1-color"></span>
-				<span class="icon-star-full star-1-nocolor"></span>
-				<span class="icon-star-full star-1-nocolor"></span>
-				<span class="icon-star-full star-1-nocolor"></span>
-				<span class="icon-star-full star-1-nocolor"></span>';
-        } 
-	}
 
 	public function getExcerpt100Attribute()
 	{
@@ -101,10 +50,16 @@ class Movie extends Model
 		return str_limit($this->review, 200, '...');
 	}
 
-	public function getScoreAttribute()
+	public function getFaRatFormatAttribute()
 	{
-		if ($this->fa_rat) return round($this->fa_rat);
-		else return false;
+		$faRat = explode('.', $this->fa_rat);
+		return $faRat[0] . '<i>.' . $faRat[1] . '</i>';
+	}
+
+	public function getImRatFormatAttribute()
+	{
+		$imRat = explode('.', $this->im_rat);
+		return $imRat[0] . '<i>.' . $imRat[1] . '</i>';
 	}
 
 

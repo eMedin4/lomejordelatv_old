@@ -31,21 +31,22 @@
     }
 }
 
-.nav-filters {
+.filters-nav {
+
+
 
     li {
-        display: block;
-        padding: 2px 0px;
-        
+        display: block;   
+        padding: 2px 0;
     }
 
     .nav-title {
-        color: #a1b2f5;
-        padding: 20px 0 8px;
+        color: #8c9ec3;
+        padding: 26px 0 8px;
         display: block;
-        font-weight: 600;
+        font-weight: 500;
         text-transform: uppercase;
-        font-size: 12px;
+        font-size: 14px;
     }
     
     img {
@@ -54,9 +55,8 @@
     }
     
     a {
-        position: relative;
         color: #949fa9;
-        padding: 2px 0 2px 20px;
+        padding: 2px 0;
         display: inline-block;
     
         &.active {
@@ -72,6 +72,7 @@
             background: #949fa9;
             top: 10px;
             border-radius: 4px;
+            display: none;
         }
 
         &.active:before {

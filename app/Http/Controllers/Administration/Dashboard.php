@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Administration;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Library\CreateItems;
+use App\Library\ItemCreation;
 use App\Library\Testing;
 use App\Library\Providers\Movistar;
 use App\Library\Providers\Netflix;
@@ -12,15 +12,15 @@ use App\Library\Providers\Netflix;
 class Dashboard
 {
     private $request;
-    private $createitems;
+    private $itemCreation;
     private $movistar;
     private $testing;
     private $netflix;
 
-    public function __Construct(Request $request, CreateItems $createitems, Movistar $movistar, Testing $testing, Netflix $netflix)
+    public function __Construct(Request $request, ItemCreation $itemCreation, Movistar $movistar, Testing $testing, Netflix $netflix)
 	{
         $this->request = $request;
-        $this->createitems = $createitems;
+        $this->itemCreation = $itemCreation;
         $this->movistar = $movistar;
         $this->testing = $testing;
         $this->netflix = $netflix;
@@ -49,7 +49,7 @@ class Dashboard
     {
         $faid = trim($this->request->input('faid'));
         if (substr( $faid, 0, 4 ) !== "film") $faid = "film" . $faid;
-        $this->createitems->setFromFaId('browse', $faid);
+        $this->itemCreation->setFromFaId('browse', $faid);
     }
 
     public function setFromMultiIds()
@@ -57,7 +57,7 @@ class Dashboard
         $faids = explode(',', $this->request->input('faids'));
         foreach($faids as $faid) {
 			if (substr( trim($faid), 0, 4 ) !== "film") $faid = "film" . $faid;
-            $this->createitems->setFromFaId('browse', $faid);
+            $this->itemCreation->setFromFaId('browse', $faid);
         }
     }
 
@@ -68,7 +68,7 @@ class Dashboard
         else $firstPage = 1;
         if ($this->request->input('total-pages')) $totalPages = $this->request->input('total-pages');
         else $totalPages = 1000;
-        $this->createitems->setFromLetter('browse', $letter, $firstPage, $totalPages);
+        $this->itemCreation->setFromLetter('browse', $letter, $firstPage, $totalPages);
     }
 
     public function setMovistar()
@@ -83,7 +83,8 @@ class Dashboard
             $faid = trim($this->request->input('faid'));
             $details = $this->request->input('details');
             if (substr( $faid, 0, 4 ) !== "film") $faid = "film" . $faid;
-            $data = $this->testing->faTmTest($faid, 'browse', $details, $more = false);
+            $data = $this->testing->faTmTest($faid, $details, $more = false);
+            //dd($data);
             return view('administration.testing', compact('data', 'details'));
         }
 
@@ -92,7 +93,7 @@ class Dashboard
             $faid = trim($this->request->input('faid'));
             $details = $this->request->input('details');
             if (substr( $faid, 0, 4 ) !== "film") $faid = "film" . $faid;
-            $data = $this->testing->faTmTest($faid, 'browse', $details, $more = true);
+            $data = $this->testing->faTmTest($faid, $details, $more = true);
             return view('administration.testing', compact('data', 'details'));
         }
 
@@ -110,9 +111,10 @@ class Dashboard
         return view('administration.testing');
     }
 
-    public function netflix()
+    public function testNetflix($page)
     {
-        $movies = $this->netflix->getMovies('browse');
+        $movies = $this->netflix->test($page);
+        dd($movies);
     }
 
 

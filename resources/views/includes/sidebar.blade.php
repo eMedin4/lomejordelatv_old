@@ -2,72 +2,86 @@
 
 {{--dd($parameters, $type, $channel, $time, $sort, Route::current()->parameters())--}}
     <?php $sort = ($sort == 'destacadas') ? null : $sort; ?>
-    <ul class="nav-filters">
+    <ul class="filters-nav">
+        @if (Route::currentRouteName() == 'tv')
+            <li><span class="nav-title">Contenido</span></li>
+            <li><a href="{{route('tv', ['type' => 'peliculas', 'channel' => $channel])}}" class="{{($routeInfo['type'] == 'peliculas') ? 'active' : ''}}">Películas de Tv</a></li>
+            <li><a href="{{route('tv', ['type' => 'series', 'channel' => $channel])}}" class="{{($routeInfo['type'] == 'series') ? 'active' : ''}}">Series de Tv</a></li>
+            <li><span class="nav-title">Por fecha</span></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'todas', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'cualquier-momento') ? 'active' : ''}}">Todas</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'hoy', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'ahora') ? 'active' : ''}}">Hoy</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'ahora', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'hoy') ? 'active' : ''}}">Ahora</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'esta-noche', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'esta-noche') ? 'active' : ''}}">Esta noche</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'manana', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'manana') ? 'active' : ''}}">Mañana</a></li>
+            <li><span class="nav-title">Ordenar por</span></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => 'destacadas'])}}" class="{{($routeInfo['sort'] == 'destacadas') ? 'active' : ''}}">Destacadas</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => 'populares'])}}" class="{{($routeInfo['sort'] == 'populares') ? 'active' : ''}}">Populares</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => 'mejores'])}}" class="{{($routeInfo['sort'] == 'mejores') ? 'active' : ''}}">Mejor puntuación</a></li>
+            <li><span class="nav-title">Canales</span></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => 'tv', 'time' => $time, 'sort' => $sort])}}" class="">Todos</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => 'tdt', 'time' => $time, 'sort' => $sort])}}" class="">Canales Tdt</a></li>
+            <li><a href="{{route('tv', ['type' => $type, 'channel' => 'canales-de-pago', 'time' => $time, 'sort' => $sort])}}" class="">Canales de pago</a></li>
+        @elseif (Route::currentRouteName() == 'netflix')
+            <li><span class="nav-title">Contenido</span></li>
+            <li><a href="{{route('netflix', ['type' => 'peliculas'])}}" class="{{($routeInfo['type'] == 'peliculas') ? 'active' : ''}}">Películas de Tv</a></li>
+            <li><a href="{{route('netflix', ['type' => 'series'])}}" class="{{($routeInfo['type'] == 'series') ? 'active' : ''}}">Series de Tv</a></li>
+            <li><span class="nav-title">Estado</span></li>
+            <li><a href="{{route('netflix', ['type' => $type, 'time' => 'todas', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'todas') ? 'active' : ''}}">Todas</a></li>
+            <li><a href="{{route('netflix', ['type' => $type, 'time' => 'nuevas', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'nuevas') ? 'active' : ''}}">Nuevas</a></li>
+            <li><a href="{{route('netflix', ['type' => $type, 'time' => 'expiran', 'sort' => $sort])}}" class="{{($routeInfo['time'] == 'expiran') ? 'active' : ''}}">Expiran</a></li>
+            <li><span class="nav-title">Ordenar por</span></li>
+            <li><a href="{{route('netflix', ['type' => $type, 'time' => $time, 'sort' => 'destacadas'])}}" class="{{($routeInfo['sort'] == 'destacadas') ? 'active' : ''}}">Destacadas</a></li>
+            <li><a href="{{route('netflix', ['type' => $type, 'time' => $time, 'sort' => 'populares'])}}" class="{{($routeInfo['sort'] == 'populares') ? 'active' : ''}}">Populares</a></li>
+            <li><a href="{{route('netflix', ['type' => $type, 'time' => $time, 'sort' => 'mejores'])}}" class="{{($routeInfo['sort'] == 'mejores') ? 'active' : ''}}">Mejor puntuación</a></li>
+            <li><span class="nav-title">Año</span></li>
+            {{--<!-- <li>
+                <form class="filters-year-form @if ($fromYear && $toYear) active @endif" action="{{route('processFiltersYearForm', ['type' => $type, 'channel' => 'netflix', 'time' => $time, 'sort' => $sort])}}" method="post">
+                    @csrf
+                        <select name="from-year">
+                        <option selected disabled>Desde</option>
+                        @for ($i = 2019; $i > 1920; $i--)
+                        if ($fromYear == $i)
+                        <option value="{{$i}}" @if ($fromYear == $i) selected @endif>{{$i}}</option>
+                        @endfor
+                    </select>
+                    <span class="break">-</span>
+                    <select name="to-year">
+                        <option selected disabled>Hasta</option>
+                        @for ($i = 2019; $i > 1920; $i--)
+                        <option value="{{$i}}" @if ($toYear == $i) selected @endif>{{$i}}</option>
+                        @endfor
+                    </select>
+                    <button type="submit">>></button>
+                </form>
+            </li> -->--}}
 
-        <li>
-            <span class="nav-title">Contenido</span>
-        </li>
-        <li>
-            <img src="images/021-clapperboard.svg">
-            <a href="{{route('tv', ['type' => 'peliculas', 'channel' => $channel])}}" class="{{($parameters['type'] == 'peliculas') ? 'active' : ''}}">Películas de Tv</a>
-        </li>
-        <li>
-            <img src="images/041-television-2.svg">
-            <a href="{{route('tv', ['type' => 'series', 'channel' => $channel])}}" class="{{($parameters['type'] == 'series') ? 'active' : ''}}">Series de Tv</a>
-        </li>
-        <li>
-            <span class="nav-title">Por fecha</span>
-        </li>
-        <li>
-            <img src="images/036-earth-grid.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'todas', 'sort' => $sort])}}" class="{{($parameters['time'] == 'cualquier-momento') ? 'active' : ''}}">Todas</a>
-        </li>
-        <li>
-            <img src="images/038-wall-clock.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'hoy', 'sort' => $sort])}}" class="{{($parameters['time'] == 'ahora') ? 'active' : ''}}">Hoy</a>
-        </li>
-        <li>
-            <img src="images/035-calendar.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'ahora', 'sort' => $sort])}}" class="{{($parameters['time'] == 'hoy') ? 'active' : ''}}">Ahora</a>
-        </li>
-        <li>
-            <img src="images/night.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'esta-noche', 'sort' => $sort])}}" class="{{($parameters['time'] == 'esta-noche') ? 'active' : ''}}">Esta noche</a>
-        </li>
-        <li>
-            <img src="images/calendar.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => 'manana', 'sort' => $sort])}}" class="{{($parameters['time'] == 'manana') ? 'active' : ''}}">Mañana</a>
-        </li>
-        <li>
-            <span class="nav-title">Ordenar por</span>
-        </li>
-        <li>
-            <img src="images/016-like.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => 'destacadas'])}}" class="{{($parameters['sort'] == 'destacadas') ? 'active' : ''}}">Destacadas</a>
-        </li>
-        <li>
-            <img src="images/038-like-1.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => 'populares'])}}" class="{{($parameters['sort'] == 'populares') ? 'active' : ''}}">Populares</a>
-        </li>
-        <li>
-            <img src="images/favorites.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => $channel, 'time' => $time, 'sort' => 'mejores'])}}" class="{{($parameters['sort'] == 'mejores') ? 'active' : ''}}">Mejor puntuación</a>
-        </li>
-        <li>
-            <span class="nav-title">Canales</span>
-        </li>
-        <li>
-            <img src="images/046-tablet.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => 'tv', 'time' => $time, 'sort' => $sort])}}" class="">Todos</a>
-        </li>
-        <li>
-            <img src="images/017-remote-control.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => 'tdt', 'time' => $time, 'sort' => $sort])}}" class="">Canales Tdt</a>
-        </li>
-        <li>
-            <img src="images/047-television-1.svg">
-            <a href="{{route('tv', ['type' => $type, 'channel' => 'canales-de-pago', 'time' => $time, 'sort' => $sort])}}" class="">Canales de pago</a>
-        </li>
+
+
+        @elseif (Route::currentRouteName() == 'amazon')
+            <li><span class="nav-title">Contenido</span></li>
+            <li><a href="{{route('amazon', ['type' => 'peliculas'])}}" class="{{($routeInfo['type'] == 'peliculas') ? 'active' : ''}}">Películas de Tv</a></li>
+            <li><a href="{{route('amazon', ['type' => 'series'])}}" class="{{($routeInfo['type'] == 'series') ? 'active' : ''}}">Series de Tv</a></li>
+            <li><span class="nav-title">Ordenar por</span></li>
+            <li><a href="{{route('amazon', ['type' => $type, 'sort' => 'destacadas'])}}" class="{{($routeInfo['sort'] == 'destacadas') ? 'active' : ''}}">Destacadas</a></li>
+            <li><a href="{{route('amazon', ['type' => $type, 'sort' => 'populares'])}}" class="{{($routeInfo['sort'] == 'populares') ? 'active' : ''}}">Populares</a></li>
+            <li><a href="{{route('amazon', ['type' => $type, 'sort' => 'mejores'])}}" class="{{($routeInfo['sort'] == 'mejores') ? 'active' : ''}}">Mejor puntuación</a></li>
+
+
+
+
+        @elseif (Route::currentRouteName() == 'hbo')
+            <li><span class="nav-title">Contenido</span></li>
+            <li><a href="{{route('hbo', ['type' => 'peliculas'])}}" class="{{($routeInfo['type'] == 'peliculas') ? 'active' : ''}}">Películas de Tv</a></li>
+            <li><a href="{{route('hbo', ['type' => 'series'])}}" class="{{($routeInfo['type'] == 'series') ? 'active' : ''}}">Series de Tv</a></li>
+            <li><span class="nav-title">Ordenar por</span></li>
+            <li><a href="{{route('hbo', ['type' => $type, 'sort' => 'destacadas'])}}" class="{{($routeInfo['sort'] == 'destacadas') ? 'active' : ''}}">Destacadas</a></li>
+            <li><a href="{{route('hbo', ['type' => $type, 'sort' => 'populares'])}}" class="{{($routeInfo['sort'] == 'populares') ? 'active' : ''}}">Populares</a></li>
+            <li><a href="{{route('hbo', ['type' => $type, 'sort' => 'mejores'])}}" class="{{($routeInfo['sort'] == 'mejores') ? 'active' : ''}}">Mejor puntuación</a></li>
+
+
+
+
+         @endif
     </ul>
 
 

@@ -104,7 +104,13 @@ class Format
 	//decodifica carácteres como &rsquo; a sus carácteres normales
 	public function decode($string)
 	{
-		return html_entity_decode($string, ENT_NOQUOTES, 'UTF-8');
+		return html_entity_decode($string, ENT_QUOTES);
+	}
+
+	//Extrae números de un string
+	public function toNumbers($string) 
+	{
+		return (int) filter_var($string, FILTER_SANITIZE_NUMBER_INT);
 	}
     
 }

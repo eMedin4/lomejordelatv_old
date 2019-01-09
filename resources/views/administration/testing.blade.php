@@ -14,12 +14,11 @@
         <button type="submit" name="verify">Relacionar</button>
     </div>
     <div class="content content-testing">
-
         <!--BASE DE DATOS FILMAFFINITY-->
         <div class="card-wrap">
             <div class="card">
                 <h3>Base de datos (Filmaffinity)</h3>
-                @if (isset($data) && $data['db'] == true)
+                @if (isset($data['db']) && $data['db'] == true)
                     <span class="id">{{$data['db']->fa_id}}</span>
                     <span class="title">{{$data['db']->title}} <i>{{$data['db']->original_title}}</i></span>
                     <span class="meta">{{$data['db']->year}} {{$data['db']->country}}</span>
@@ -33,7 +32,7 @@
         <div class="card-wrap">
             <div class="card">
                 <h3>Base de datos (Themoviedb)</h3>
-                @if (isset($data) && $data['db'] == true && $data['db']->tm_id)
+                @if (isset($data['db']) && $data['db'] == true && $data['db']->tm_id)
                     <span class="id">{{$data['db']->tm_id}}</span>
                     <span class="director">
                         @foreach ($data['db']->characters as $character)
@@ -58,12 +57,13 @@
         <div class="card-wrap">
             <div class="card">
                 <h3>Filmaffinity (web)</h3>
-                @if (isset($data))
+                @if (isset($data['fa']))
                     @if ($data['fa']['response'] == true)
                         <a class="id" href="https://www.filmaffinity.com/es/film{{$data['fa']['fa_id']}}.html">{{$data['fa']['fa_id']}}</a>
                         <span class="title">{{$data['fa']['fa_title']}} <i>{{$data['fa']['fa_original']}}</i></span>
                         <span class="director">{{$data['fa']['fa_director']}}</span>
                         <span class="meta">{{$data['fa']['fa_year']}} {{$data['fa']['fa_country']}}</span>
+                        <span class="metatype">{{$data['fa']['fa_type']}}</span>
                         <img src="https://s3.eu-west-3.amazonaws.com/lomejordelatv/movieimages/temp/{{$data['fa']['fa_id']}}.jpg">
                         <input type="hidden" name="faidpermanent" value="{{$data['fa']['fa_id']}}">
                     @else
@@ -76,7 +76,7 @@
         <div class="card-wrap">
             <div class="card">
                 <h3>Themoviedb (api)</h3>
-                @if (isset($data))  
+                @if (isset($data['tm']))  
                     @if ($details)
                         @foreach ($data['tm'] as $movie)
                             <div class="card-inner">
@@ -115,14 +115,15 @@
                         @endforeach
                     @else
                         @foreach ($data['tm'] as $movie)
+                            {{--dd($movie)--}}
                             <div class="card-inner">
-                                <input type="radio" name="tm_id" value="{{$movie->id}}">
-                                <a class="id" href="https://www.themoviedb.org/movie/{{$movie->id}}">{{$movie->id}}</a>
-                                <span class="title">{{$movie->title}} <i>{{$movie->original_title}}</i></span>
-                                <span class="meta">{{substr($movie->release_date, 0,4)}}</span>
+                                <input type="radio" name="tm_id" value="{{$movie['tm_id']}}">
+                                <a class="id" href="https://www.themoviedb.org/movie/{{$movie['tm_id']}}">{{$movie['tm_id']}}</a>
+                                <span class="title">{{$movie['tm_title']}} <i>{{$movie['tm_original']}}</i></span>
+                                <span class="meta">{{$movie['tm_year']}}</span>
                                 <div>
-                                    <img class="poster-tmdb" src="http://image.tmdb.org/t/p/w1280{{$movie->poster_path}}">
-                                    <img class="background-tmdb" src="http://image.tmdb.org/t/p/w1280{{$movie->backdrop_path}}">
+                                    <img class="poster-tmdb" src="http://image.tmdb.org/t/p/w1280{{$movie['poster']}}">
+                                    <img class="background-tmdb" src="http://image.tmdb.org/t/p/w1280{{$movie['background']}}">
                                 </div>
                             </div>
                         @endforeach

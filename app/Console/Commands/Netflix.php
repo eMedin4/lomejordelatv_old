@@ -7,7 +7,7 @@ use App\Library\Providers\Netflix as NetflixProvider;
 
 class Netflix extends Command
 {
-    protected $signature = 'tv:netflix {--id=} {--p=}';
+    protected $signature = 'tv:netflix {--id=} {--p=} {--seasons}';
     protected $description = 'Descarga catalogo Netflix';
     private $netflix;
 
@@ -21,6 +21,7 @@ class Netflix extends Command
     {
         $id = $this->option('id');
         $pages = $this->option('p');
+        $seasons = $this->option('seasons');
 
         //Si hemos introducido páginas
         if ($pages) {
@@ -32,6 +33,9 @@ class Netflix extends Command
 
         //Si hemos introducido un id
         if ($id) $this->netflix->runId($id);
+
+        //Si hemos introducido --seasons vamos a descargar unas cuantas temporadas de series
+        if ($seasons) $this->netflix->getSeasons();
 
         //Si no recuperamos todo
         else $this->netflix->runAll();
