@@ -1,6 +1,11 @@
 .main-header-wrap {
     position: relative; //para el icono background
-    background: radial-gradient(1000px at 50% 0, $base-dark-color, $base-light-color, $base-light-color);
+    background: #e7eaf1;
+    background: radial-gradient(1000px at 24% 8%, #f7f8f9, #e7eaf1);
+
+    .item-page & {
+        background: inherit;
+    }
 }
 
 .topbar {
@@ -11,7 +16,7 @@
 .topbar-inner {
     display: flex;
     align-items: center;
-    padding: 0 20px;
+    padding: 0 40px;
 
     @include mq('tablet-wide') {
         padding-right: 0;
@@ -31,8 +36,8 @@
 
 .logo {
 
-    margin: 0 18px 6px 10px;
-    color: #fff;
+    margin: 0 40px 6px 0;
+    padding-left: 10px;
 
     @include mq('tablet-wide') {
         margin-bottom: 0;
@@ -40,15 +45,13 @@
 
     .icon-tv {
         font-size: 20px;
-        color: #fff;
         transform: rotate(10deg);
         display: inline-block;
     }
 
     p {
         font-family: $alt-font;
-        font-size: 22px;
-        letter-spacing: .5px;
+        font-size: 20px;
         display: inline-block;
         font-weight: 900;
 
@@ -58,12 +61,10 @@
     }
 }
 
-.main-nav,
-.aux-nav {
+.main-nav {
 
     li {
         display: inline-block;
-        margin-left: 20px;
 
         @include mq('tablet-wide') {
             margin-left: 0;
@@ -71,16 +72,15 @@
     }
 
     a {
-        color: #d9e1e8;
         padding: 10px;
         font-weight: 500;
-        letter-spacing: 1px;
-    }
-}
+        color: #5b5e63;
+        display: inline-block;
 
-.aux-nav {
-    @include mq('tablet-wide') {
-        display: none;
+        &.active {
+            font-weight: 500;
+            color: #2370bd;
+        }
     }
 }
 
@@ -90,13 +90,15 @@
     position: relative;
 }
 
+.intro-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px 40px;
+}
+
 .intro-content {
-    @include center-auto;
-    max-width: 1100px;
-    text-align: center;
-    padding: 60px 0;
-    position: relative;
-    z-index: 100; // para sobreponer al icono de fondo
+    flex-basis: 60%;
 
     @include mq('tablet-wide') {
         padding: 0;
@@ -104,9 +106,9 @@
 }
 
 .intro-content h1 {
-    font-size: 66px;
-    font-weight: 500;
-    padding-bottom: 20px;
+    font-size: 42px;
+    font-weight: 300;
+    padding-bottom: 15px;
 
     @include mq('tablet-wide') {
         font-size: 26px;
@@ -114,18 +116,45 @@
 }
 
 .intro-content p {
+    font-weight: 300;
     font-size: 18px;
+    padding-bottom: 20px;
 
     @include mq('tablet-wide') {
         display: none;
     }
 }
 
-.icon-tv-background {
-    @include absolute-position(auto, 0, -680px, auto);
-    font-size: 1000px;
-    transform: rotate(-10deg);
-    color: $base-dark-color;  
+.icon-tv-background-1 {
+    position: absolute;
+    top: auto;
+    left: -737px;
+    bottom: -740px;
+    /* left: auto; */
+    font-size: 1160px;
+    color: #d7dbe4;
+    z-index: 0;
+    -webkit-transform: rotate(10deg);
+    transform: rotate(10deg);
+    display: none;
+
+    @include mq('tablet-wide') {
+        display: none;
+    }
+}
+
+.icon-tv-background-2 {
+    position: absolute;
+    top: auto;
+    right: -213px;
+    bottom: -1000px;
+    left: auto;
+    font-size: 1090px;
+    color: #d7dbe4;
+    z-index: 0;
+    -webkit-transform: rotate(10deg);
+    transform: rotate(170deg);
+    display: none;
 
     @include mq('tablet-wide') {
         display: none;
@@ -134,10 +163,11 @@
 
 .scroll {
 
-    white-space: nowrap; /* [1] */
-    overflow-x: auto; /* [2] */
-    -webkit-overflow-scrolling: touch; /* [3] */
-    -ms-overflow-style: -ms-autohiding-scrollbar; /* [4] */ }
+    // white-space: nowrap; /* [1] */
+    // overflow-x: auto; /* [2] */
+    // -webkit-overflow-scrolling: touch; /* [3] */
+    // -ms-overflow-style: -ms-autohiding-scrollbar; /* [4] */ 
+}
   
   /* [5] */
   .scroll::-webkit-scrollbar {
@@ -153,6 +183,31 @@
         background: linear-gradient(to right, rgba(255,0,0,0), $base-color);
     }
 }
+
+.info-cards {
+    text-align: center;
+
+    li {
+        display: inline-block;
+        background: #dcdfe747;
+        border-radius: 4px;
+        padding: 53px 40px;
+        margin-left: 26px;
+        font-weight: 300;
+    }
+
+    span {
+        display: block;
+        font-size: 30px;
+        color: #91959d;
+    }
+
+    div {
+        font-size: 16px;
+        color: #aaafb9;
+    }
+}
+
 
 
 

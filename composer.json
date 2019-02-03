@@ -10,11 +10,13 @@
         "fideloper/proxy": "^4.0",
         "intervention/image": "^2.4",
         "laravel/framework": "5.7.*",
+        "laravel/scout": "^6.1",
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "league/flysystem-cached-adapter": "^1.0",
         "mashape/unirest-php": "^3.0",
-        "nesbot/carbon": "1.26.*"
+        "nesbot/carbon": "1.26.*",
+        "yab/laravel-scout-mysql-driver": "^2.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

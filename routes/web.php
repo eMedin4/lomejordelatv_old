@@ -2,8 +2,6 @@
 
 //Route::redirect('/', '/películas-en-tv'); Esto es una redireccion 301 pero en local no funciona porque redirecciona a localhost/peliculas-en-tv. Comprobar en servidor
 
-Route::get('/amazon', 'TestController@amazon');
-
 Route::get('/', function(){
     return redirect()->route('tv', ['type' => 'peliculas', 'channel' => 'tv']);
 });
@@ -18,29 +16,28 @@ Route::get('/{type}-{channel}/{time?}/{sort?}', 'MovieController@tv')
     ->name('tv');
 
 
-Route::get('/{type}-netflix/{time?}/{sort?}', 'MovieController@netflix')
+Route::get('/{type}-netflix/{list?}', 'MovieController@netflix')
     ->where([
         'type' => 'series|peliculas',
-        'time' => 'todas|nuevas|expiran', 
-        'sort' => 'destacadas|populares|mejores',
+        'list' => 'trending|nuevas|expiran|mejores|populares', 
         ])
     ->name('netflix');
 
-Route::get('/amazon-{type}/{sort?}/', 'MovieController@amazon')
+Route::get('/{type}-amazon/{list?}/', 'MovieController@amazon')
     ->where([
         'type' => 'series|peliculas',
-        'sort' => 'destacadas|populares|mejores',
+        'list' => 'trending|mejores|populares',
         ])
     ->name('amazon');
 
-Route::get('/hbo-{type}/{sort?}', 'MovieController@hbo')
+Route::get('/{type}-hbo/{list?}', 'MovieController@hbo')
     ->where([
         'type' => 'series|peliculas',
-        'sort' => 'destacadas|populares|mejores',
+        'list' => 'trending|mejores|populares',
         ])
     ->name('hbo');
 
-Route::post('/processFiltersYearForm/{type}/{channel}/{time?}/{sort?}', 'MovieController@processFiltersYearForm')->name('processFiltersYearForm');
+
 
 
 
@@ -52,7 +49,8 @@ Route::get('/nuevas-{type}-de-netflix', 'MovieController@newNetflix')->where(['t
 
 */
 
-Route::get('/pelicula/{slug}', 'MovieController@show')->name('movie');
+Route::post('/livesearch', 'MovieController@liveSearch')->name('liveSearch');
+Route::get('/titulo/{slug}', 'MovieController@show')->name('movie');
 
 
 
@@ -63,7 +61,8 @@ Route::get('/pelicula/{slug}', 'MovieController@show')->name('movie');
 Route::group([
     'middleware' => ['auth', 'admin'],
     'namespace' => 'Administration',
-    'prefix' => 'administration'
+    'prefix' => 'administration',
+    'as' => 'administration.',
 ], function() {
     Route::get('testnetflix/{page}', 'Dashboard@testNetflix')->name('testNetflix');
 
@@ -77,8 +76,15 @@ Route::group([
     Route::get('/setfrommultiids', 'Dashboard@setFromMultiIds')->name('setFromMultiIds');
     Route::get('/netflix', 'Dashboard@netflix')->name('setNetflix');
     Route::get('/movistar', 'Dashboard@setMovistar')->name('setMovistar');
-    Route::get('/amazon', 'amazonScraper@movies');
-    Route::get('/testing', 'Dashboard@testing')->name('testing');
+
+
+    Route::get('/testing', 'Dashboard@testing')->name('testing');;
+    Route::get('/managemovies/{provider}', 'ManageMovies@index')
+    ->where([
+        'provider' => 'netflix|amazon|hbo',
+        ])
+    ->name('manageMovies');
+    Route::post('/managemovies', 'ManageMovies@store')->name('postManageMovies');
 });
 
 /* 

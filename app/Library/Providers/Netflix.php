@@ -48,7 +48,7 @@ class Netflix
                     if ($movie) {
 
                         //guardamos la pelicula
-                        $this->netflixRepository->setNetflix($item->netflixid, $movie->id, $item->type, $movie->fa_popularity);
+                        $this->netflixRepository->setNetflix($item->netflixid, $movie->id, $item->type, $movie->popularity);
                         $this->output->message("Guardada ok en db:Netflix-> $item->netflixid : $item->title -> $movie->fa_id  : $movie->title", false);
                     }
                 }
@@ -57,7 +57,7 @@ class Netflix
 
         } while (!empty($response->body->ITEMS));
 
-        $this->netflixRepository->resetDates();
+        //$this->netflixRepository->resetDates(); Probamos sin resetear para mantener las fechas pasadas
         $this->getDates('new');
         $this->getDates('expire');
         $this->getSeasons();

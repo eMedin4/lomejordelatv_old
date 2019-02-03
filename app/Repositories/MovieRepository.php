@@ -52,74 +52,102 @@ class MovieRepository {
         return $records;
     }
 
-    public function getNetflix($type, $time, $sort, $fromYear, $toYear)
+    public function getNetflix($type, $list, $take = 50)
     {
 
         $type = ($type == 'peliculas') ? 'movie' : 'series';
+        if ($list == 'recomendadas') $list = 'important';
+        elseif ($list == 'trending') $list = 'trending';
+        elseif ($list == 'mejores') $list = 'fa_rat';
+        elseif ($list == 'populares') $list = 'fa_count';
         
-        if ($sort == 'destacadas') $sort = 'trend';
-        elseif ($sort == 'populares') $sort = 'fa_count';
-        elseif ($sort == 'mejores') $sort = 'fa_rat';
-        
-        $records = Netflix::where('netflix.type', $type)
-        ->join('movies', 'netflix.movie_id', '=', 'movies.id')
-        ->with('providersseasons')
-        ->when($time == 'new', function($q, $time) {
-            return $q->whereNotNull('new');
+        $records = Netflix::where([['type', $type], ['online', 1]])
+        ->with(['movie', 'providersseasons' => function ($query) {
+            $query->orderBy('number', 'asc');
+        }])
+        ->when($list == 'nuevas', function($q) {
+            return $q->whereNotNull('new')->orderBy('new', 'desc');
         })
-        ->when($time == 'expire', function($q, $time) {
-            return $q->whereNotNull('expire');
+        ->when($list == 'expiran', function($q) {
+            return $q->whereNotNull('expire')->orderBy('expire', 'desc');
         })
-        ->when($fromYear && $toYear, function($q) use($fromYear, $toYear) {
-            return $q->whereBetween('year', [$fromYear, $toYear]);
+        ->when(($list == 'important') || ($list == 'trending'), function($q) use ($list, $take) {
+            return $q->orderBy($list, 'desc')->take($take);
         })
-        ->orderBy($sort, 'desc')
-        ->take(50)
         ->get();
 
-        
-        //Si usamos el metodo groupBy de colecciones te construye una estructura en la qu
-        //que te muestra los repetidos, si lo metieramos en el query builder no se ven los repetidos
-        $records = $records->groupBy('movie_id');
+        if (($list == 'fa_count') || ($list == 'fa_rat')) {
+            $records = $records->sortByDesc('movie.' . $list)->take($take);
+        }
+
         return $records;
     }
 
-    public function getAmazon($type, $sort)
+    public function getNetflixCount($type)
+    {
+        $type = ($type == 'peliculas') ? 'movie' : 'series';
+        return Netflix::where('type', $type)->count();
+    }
+
+    public function getAmazon($type, $list, $take = 50)
     {
         $type = ($type == 'peliculas') ? 'movie' : 'TV';
+        if ($list == 'recomendadas') $list = 'important';
+        elseif ($list == 'trending') $list = 'trending';
+        elseif ($list == 'mejores') $list = 'fa_rat';
+        elseif ($list == 'populares') $list = 'fa_count';
         
-        if ($sort == 'destacadas') $sort = 'trend';
-        elseif ($sort == 'populares') $sort = 'fa_count';
-        elseif ($sort == 'mejores') $sort = 'fa_rat';
-        
-        $records = Amazon::where('amazon.type', $type)
-        ->join('movies', 'amazon.movie_id', '=', 'movies.id')
-        ->with('providersseasons')
-        ->orderBy($sort, 'desc')
-        ->take(50)
+        $records = Amazon::where([['type', $type], ['online', 1]])
+        ->with(['movie', 'providersseasons' => function ($query) {
+            $query->orderBy('number', 'asc');
+        }])
+        ->when(($list == 'important') || ($list == 'trending'), function($q) use ($list, $take) {
+            return $q->orderBy($list, 'desc')->take($take);
+        })
         ->get();
 
-        $records = $records->groupBy('movie_id');
+        if (($list == 'fa_count') || ($list == 'fa_rat')) {
+            $records = $records->sortByDesc('movie.' . $list)->take($take);
+        }
+
         return $records;
     }
 
-    public function getHbo($type, $sort)
+    public function getAmazonCount($type)
     {
         $type = ($type == 'peliculas') ? 'movie' : 'TV';
+        return Amazon::where('type', $type)->count();
+    }
+
+
+    public function getHbo($type, $list, $take = 50)
+    {
+        $type = ($type == 'peliculas') ? 'movie' : 'show';
+        if ($list == 'recomendadas') $list = 'important';
+        elseif ($list == 'trending') $list = 'trending';
+        elseif ($list == 'mejores') $list = 'fa_rat';
+        elseif ($list == 'populares') $list = 'fa_count';
         
-        if ($sort == 'destacadas') $sort = 'trend';
-        elseif ($sort == 'populares') $sort = 'fa_count';
-        elseif ($sort == 'mejores') $sort = 'fa_rat';
-        
-        $records = Hbo::where('hbo.type', $type)
-        ->join('movies', 'hbo.movie_id', '=', 'movies.id')
-        ->with('providersseasons')
-        ->orderBy($sort, 'desc')
-        ->take(50)
+        $records = Hbo::where([['type', $type], ['online', 1]])
+        ->with(['movie', 'providersseasons' => function ($query) {
+            $query->orderBy('number', 'asc');
+        }])
+        ->when(($list == 'important') || ($list == 'trending'), function($q) use ($list, $take) {
+            return $q->orderBy($list, 'desc')->take($take);
+        })
         ->get();
 
-        $records = $records->groupBy('movie_id');
+        if (($list == 'fa_count') || ($list == 'fa_rat')) {
+            $records = $records->sortByDesc('movie.' . $list)->take($take);
+        }
+
         return $records;
+    }
+
+    public function getHboCount($type)
+    {
+        $type = ($type == 'peliculas') ? 'movie' : 'show';
+        return Hbo::where('type', $type)->count();
     }
 
     public function timeIntervals($time, $type)
@@ -145,6 +173,11 @@ class MovieRepository {
             else return [Carbon::now()->addDay()->setTime(3,0,0), Carbon::now()->addDay()->setTime(23,59,59)];
         }
 
+    }
+
+    public function liveSearch($string)
+    {
+        return Movie::search($string)->take(10)->get();
     }
 
 

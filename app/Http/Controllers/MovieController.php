@@ -26,28 +26,28 @@ class MovieController extends Controller
     }
 
 
-    public function netflix($type, $time = 'todas', $sort = 'destacadas', $fromyear = null, $toyear = null)
+    public function netflix($type, $list = 'recomendadas')
     {
-        $records = $this->movieRepository->getNetflix($type, $time, $sort, $fromyear, $toyear);
-        $parameters = ['type' => $type, 'channel' => 'netflix', 'time' => $time, 'sort' => $sort, 'fromYear' => $fromyear, 'toYear' => $toyear];
-        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
-        return view('main', compact(['parameters', 'records']));
+        $records = $this->movieRepository->getNetflix($type, $list);
+        $recordsCount = $this->movieRepository->getNetflixCount($type);
+        if ($records->isEmpty()) return view('empty');
+        return view('main', compact(['records', 'recordsCount']));
     }
 
-    public function amazon($type, $sort = 'destacadas')
+    public function amazon($type, $sort = 'recomendadas')
     {
         $records = $this->movieRepository->getAmazon($type, $sort);
-        //$parameters = ['type' => $type, 'channel' => 'netflix', 'sort' => $sort];
-        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
-        return view('main', compact(['records']));
+        $recordsCount = $this->movieRepository->getAmazonCount($type);
+        if ($records->isEmpty()) return view('empty');
+        return view('main', compact(['records', 'recordsCount']));
     }
 
-    public function hbo($type, $sort = 'destacadas')
+    public function hbo($type, $sort = 'recomendadas')
     {
         $records = $this->movieRepository->getHbo($type, $sort);
-        //$parameters = ['type' => $type, 'channel' => 'netflix', 'time' => $time, 'sort' => $sort, 'fromYear' => $fromyear, 'toYear' => $toyear];
-        if ($records->isEmpty()) return view('empty', compact(['contentOnPage']));
-        return view('main', compact(['records']));
+        $recordsCount = $this->movieRepository->getHboCount($type);
+        if ($records->isEmpty()) return view('empty');
+        return view('main', compact(['records', 'recordsCount']));
     }
 
 
@@ -73,5 +73,24 @@ class MovieController extends Controller
         Auth::logout();
         return back();
     }
+
+    public function liveSearch(Request $request)
+    {
+    	if( ! $request->ajax()) {       
+            return back(); 
+        }
+
+        $this->validate($request, [
+	        'string' => 'required|max:50'
+        ]);
+        
+        $results = $this->movieRepository->liveSearch($request->input('string'));
+        
+        if ($results->isEmpty()) {
+            return response()->json(['response' => false]);
+        }
+        
+        return response()->json(['response' => true, 'result' => $results]);
+	}
 
 }

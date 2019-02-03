@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Netflix extends Model
 {
     public $timestamps = false;
-    protected $dates = ['get_seasons_at'];
+    protected $dates = ['get_seasons_at', 'new', 'expire'];
     public $table = 'netflix';
 
     public function movie()
@@ -20,16 +20,14 @@ class Netflix extends Model
         return $this->morphMany(ProvidersSeason::class, 'provider');
     }
 
-    
-    public function getFaRatFormatAttribute()
-    {
-        return $this->movie->FaRatFormat;
-    }
-    
+    // public function getFormatFaCountAttribute()
+	// {
+	// 	return $this->movie->formatFaCount;
+	// }
 
-    public function getImRatFormatAttribute()
-    {
-        return $this->movie->ImRatFormat;
-    }
+	// public function getFormatImCountAttribute()
+	// {
+	// 	return $this->movie->formatImCount;
+	// }
         
 }

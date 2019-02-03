@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 class Movie extends Model
 {
 
-	/* protected $guarded = []; */
+	use Searchable;
 
 	protected $fillable = ['fa_id'];
     
@@ -21,6 +22,16 @@ class Movie extends Model
     	return $this->belongsToMany(Character::class)->withPivot('order');
 	}
 
+	public function directors()
+	{
+		return $this->characters()->where('department', 'director');
+	}
+
+	public function actors()
+	{
+		return $this->characters()->where('department', 'actor');
+	}
+
 	public function seasonsTable()
 	{
 		return $this->hasMany(Season::class);
@@ -29,6 +40,26 @@ class Movie extends Model
 	public function movistarTime()
 	{
 		return $this->hasMany(MovistarTime::class);
+	}
+
+	public function movistarHistory()
+	{
+		return $this->hasMany(MovistarHistory::class);
+	}
+
+	public function Netflix()
+	{
+		return $this->hasOne(Netflix::class);
+	}
+
+	public function Amazon()
+	{
+		return $this->hasOne(Amazon::class);
+	}
+
+	public function Hbo()
+	{
+		return $this->hasOne(Hbo::class);
 	}
 	
 	/* 
@@ -50,16 +81,21 @@ class Movie extends Model
 		return str_limit($this->review, 200, '...');
 	}
 
-	public function getFaRatFormatAttribute()
+	public function getFormatFaCountAttribute()
 	{
-		$faRat = explode('.', $this->fa_rat);
-		return $faRat[0] . '<i>.' . $faRat[1] . '</i>';
+		return $this->formatRound($this->fa_count);
 	}
 
-	public function getImRatFormatAttribute()
+	public function getFormatImCountAttribute()
 	{
-		$imRat = explode('.', $this->im_rat);
-		return $imRat[0] . '<i>.' . $imRat[1] . '</i>';
+		return $this->formatRound($this->im_count);
+	}
+
+	public function formatRound($value)
+	{
+		if ($value < 1000) return '<1<small>K</small>' ;
+		elseif ($value < 1000000) return floor($value / 1000) . '<small>K</small>';
+		else return floor($value / 1000000) . '<small>M</small>';
 	}
 
 

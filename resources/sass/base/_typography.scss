@@ -1,38 +1,32 @@
 
 h1, .h1 {
-    font-size: 60px;
-    font-weight: 400;
-    letter-spacing: -2px;
-    padding-bottom: 0;
-    margin-left: -3px;
-    color: $white-color;
+  font-size: 42px;
+  font-weight: 400;
+  padding-bottom: 4px;
+  margin-left: -1px;
+  letter-spacing: -1px;
   }
   
    h2, .h2 {
     font-size: 32px;
     font-weight: 400;
     padding-bottom: 0;
-    margin-left: -1px;
-    color: $white-color;
    }
   
    h3, .h3 {
     font-size: 20px;
     font-weight: 400;
     padding-bottom: 0;
-    color: $white-color;
    }
   
    h4, .h4 {
     font-size: 16px;
     font-weight: 400;
-    color: $white-color;
    }
   
    h5, .h5 {
     font-size: 15px;
     font-weight: 400;
-    color: $white-color;
    }
   
 
@@ -68,22 +62,34 @@ Icomoon
     -moz-osx-font-smoothing: grayscale;
   }
   
-  .icon-star-full:before {
-    content: "\e9d9";
-  }
-  
-  .icon-clock:before {
-    content: "\e94e";
-  }
-  
-  .icon-tv:before {
-    content: "\e95b";
-  }
-  
-  .icon-flickr2:before {
-    content: "\eaa4";
+  .icon-star:before {
+    content: "\e901";
   }
 
-  .icon-podcast:before {
-    content: "\e91c";
+  .icon-tv:before {
+    content: "\e900";
+  }
+
+  .icon-user:before {
+    content: "\e971";
+  }
+
+  .icon-star-empty:before {
+    content: "\e9d7";
+  }
+
+  .icon-man:before {
+    content: "\e9dc";
+  }
+
+  .icon-search6:before {
+    content: "\e907";
+  }
+
+  .icon-check:before {
+    content: "\e902";
+  }
+
+  .icon-checkmark:before {
+    content: "\ea10";
   }

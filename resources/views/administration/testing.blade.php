@@ -1,7 +1,7 @@
 @extends('administration.layout')
 
 @section('content')
-<form method="GET" action="{{route('testing')}}">
+<form method="GET" action="{{route('administration.testing')}}">
     @csrf
     @if (isset($responseMessage))
         <div class="message"><span>{{$responseMessage}}</span></div>

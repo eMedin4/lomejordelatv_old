@@ -32,7 +32,8 @@ class MovieComposer
     {
         $gridItemSize = [];
         $m = [2,3,5,6,8,9,11,12,14,15,17,18,20,21,23,24,26,27,29,30,32,33,35,36,38,39,41,42,44,45,47,48,50,51];
-        for ($i=0; $i < 100; $i++) { 
+        for ($i=0; $i < 51; $i++) { 
+
             //el primero en grande
             if ($i == 0) $gridItemSize[$i] = 'grid-item-x';
             //los de la izq que quedan debajo del primero 
@@ -52,8 +53,7 @@ class MovieComposer
     public function constructRouteInfo()
     {
         $route['channel'] = Route::currentRouteName(); 
-        $route['time'] = 'todas';
-        $route['sort'] = 'destacadas';
+        $route['list'] = '';
         $route = array_merge($route, Route::current()->parameters());
         return $route;
     }

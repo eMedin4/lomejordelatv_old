@@ -32,19 +32,23 @@ class NetflixRepository
 
     /*
         setNetflixDates
-        Funcion: Actualiza la columna new o expire con la fecha dada e incrementa el valor de trend en 100
+        Funcion: Actualiza la columna new o expire con la fecha dada e incrementa el valor de important en 400
         Retorna: Numero de filas afectadas (normalmente será 0 o 1)
     */
     public function setDates($netflixId, $column, $date)
     {
-        return Netflix::where('netflix_id', $netflixId)->increment('trend', 400, [$column => $date]);
+        //dump($netflixId, $column, $date);
+        return Netflix::where('netflix_id', $netflixId)->increment('important', 400, [$column => $date]);
     }
 
     public function existAndUpdate($netflixId)
     {
-        $exist = Netflix::where('netflix_id', $netflixId)->exists();
+        $exist = Netflix::where('netflix_id', $netflixId)->first();
         if ($exist) {
-            Netflix::where('netflix_id', $netflixId)->update('online', 1);
+            $popularity = $exist->movie->popularity;
+            $modifier = rand(5,15) / 10;
+            $popularity = $popularity * $modifier;
+            Netflix::where('netflix_id', $netflixId)->update(['online' => 1, 'important' => $popularity]);
         }
         return $exist;
     }
@@ -79,15 +83,13 @@ class NetflixRepository
     public function setNetflix($nfid, $id, $type, $popularity)
     {
         $modifier = rand(5,15) / 10;
-        $hot = ($popularity > 1000) ? 1 : 0;
         $popularity = $popularity * $modifier;
 
         Netflix::insert([
             'netflix_id' => $nfid,
             'movie_id'=> $id,
             'type' => $type,
-            'hot' => $hot,
-            'trend' => $popularity,
+            'important' => $popularity,
             'online' => 1,
         ]);
     }
@@ -112,6 +114,11 @@ class NetflixRepository
     public function updateGetSeasonsAt($id, $now)
     {
         Netflix::where('netflix_id', $id)->update(['get_seasons_at' => $now]);
+    }
+
+    public function setTrending($id, $value)
+    {
+        Netflix::where('id', $id)->update(['trending' => $value]);
     }
 
 

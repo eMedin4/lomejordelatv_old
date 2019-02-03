@@ -93,7 +93,10 @@ class Hbo
             // Devolvemos el modelo procedente de verificadas
             return $movie;
         }
+        if ($item['title'] == 'Supermax') {
 
+            dd($item);
+        }
         $movie = $this->hboRepository->searchItem($item['title'], $item['type']);
 
         if ($movie) {
@@ -145,7 +148,7 @@ class Hbo
 
         }
 
-        //dd(array_slice($data, 0, 10));
+        //dd(array_slice($data, 0, 50));
 
         return $data;
     }

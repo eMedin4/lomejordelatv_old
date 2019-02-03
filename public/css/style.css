@@ -115,34 +115,5 @@ Others
 
 
 
-.slots {
-  border-top: 1px solid #303643;
-  padding: 30px 0 0;
-}
-
-.slots > div {
-  padding: 0 45px;
-  color: #d9e1e8;
-  font-weight: 500;
-  font-size: 17px;
-  padding-bottom: 18px;
-  line-height: 22px;
-}
-
-.slot {
-  padding: 12px 45px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-  color: #9baec8;
-  background: repeating-linear-gradient(135deg, #303643, #303643 0px, #1f232b, #1f232b 8px);
-}
-
-.slot-expire {
-  text-decoration: line-through;
-  background: repeating-linear-gradient(135deg, #303643, #303643 0px, #191b22, #191b22 8px);
-}
 
 

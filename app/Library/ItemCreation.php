@@ -27,14 +27,13 @@ class ItemCreation
 		$this->filmaffinity = $filmaffinity;
         $this->themoviedb = $themoviedb;
         $this->algorithm = $algorithm;
-
-        //Actualizamos Tmdb genres
-        $this->itemRepository->updateTmdbGenres($this->themoviedb->updateTmdbGenres());
 	}
 
 
     public function run($explicitLetter, $explicitPage, $toTheEnd, $fullUpdate)
     {
+        //Actualizamos Tmdb genres
+        $this->itemRepository->updateTmdbGenres($this->themoviedb->updateTmdbGenres());
 
         $explicitLetter = strtoupper($explicitLetter);
         $letters = ['0-9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','0','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -76,6 +75,9 @@ class ItemCreation
 
     public function processLetter($letter, $explicitPage, $fullUpdate)
     {
+        //Actualizamos Tmdb genres
+        $this->itemRepository->updateTmdbGenres($this->themoviedb->updateTmdbGenres());
+
         $startPage = $explicitPage ? $explicitPage : 1;
         $client = new Client();
         $crawler = $this->requestUrl($client, "https://www.filmaffinity.com/es/allfilms_" . $letter . "_" . $startPage . ".html");
@@ -100,6 +102,9 @@ class ItemCreation
 
     public function processExplicitPage($letter, $page, $fullUpdate)
     {
+        //Actualizamos Tmdb genres
+        $this->itemRepository->updateTmdbGenres($this->themoviedb->updateTmdbGenres());
+
         $client = new Client();
         $crawler = $this->requestUrl($client, "https://www.filmaffinity.com/es/allfilms_" . $letter . "_" . $page . ".html");
 
@@ -153,7 +158,7 @@ class ItemCreation
         //datos de tmdb
         $tmData = $this->themoviedb->getMovie($faData);
         if ($tmData['response'] == false) {
-            $this->output->message($tmData['message'], $tmData['log'], 'error');
+            $this->output->message($tmData['message'], false, 'error');
             return false;
         } 
 

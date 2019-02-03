@@ -54,7 +54,6 @@ class AmazonRepository
     public function setAmazon($title, $link, $id, $type, $popularity)
     {
         $modifier = rand(5,15) / 10;
-        $hot = ($popularity > 1000) ? 1 : 0;
         $popularity = $popularity * $modifier;
 
         return Amazon::insertGetId([
@@ -62,8 +61,7 @@ class AmazonRepository
             'url' => $link,
             'movie_id'=> $id,
             'type' => $type,
-            'hot' => $hot,
-            'trend' => $popularity,
+            'important' => $popularity,
             'online' => 1,
         ]);
     }

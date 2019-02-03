@@ -112,5 +112,7 @@ class Format
 	{
 		return (int) filter_var($string, FILTER_SANITIZE_NUMBER_INT);
 	}
+
+	
     
 }

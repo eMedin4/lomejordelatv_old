@@ -34,7 +34,6 @@ class HboRepository
     public function setHbo($title, $link, $id, $type, $popularity)
     {
         $modifier = rand(5,15) / 10;
-        $hot = ($popularity > 1000) ? 1 : 0;
         $popularity = $popularity * $modifier;
 
         return Hbo::insertGetId([
@@ -42,8 +41,7 @@ class HboRepository
             'url' => $link,
             'movie_id'=> $id,
             'type' => $type,
-            'hot' => $hot,
-            'trend' => $popularity,
+            'important' => $popularity,
             'online' => 1,
         ]);
     }

@@ -31,16 +31,22 @@
 }
 
 .card {
-    background: $base-color;
-    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 5px 0px -2px #f2f4f6;
+    border-radius: 4px;
     padding-bottom: 12px;
+    transition: box-shadow .3s ease;
 
     a {
 
-        &:hover img {
+        &:hover .thumb img {
             transform: scale(1.05);
         }
 
+    }
+
+    &:hover {
+        box-shadow: 0 5px 0px -2px #eceded;
     }
 
 }
@@ -49,22 +55,41 @@
     position: relative;
 
     img {
-        border-radius: 8px 8px 0px 0;
-        transition: all .5s;
+        border-radius: 4px 4px 0px 0;
+        transition: all .5s ease-out;
         vertical-align: middle;
     }
 }
 
 .card-tags {
     font-size: 14px;
-    font-weight: 500;
-
+    line-height: 1.2;
+    
     li {
+        position: relative;
         display: inline-block;
         border-radius: 4px;
         letter-spacing: -.3px;
-        margin-left: 6px;
+
+        &.break {
+            margin-left: 12px;
+        }
+
+        &.break:before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: -8px;
+            width: 1px;
+            height: 2px;
+            box-shadow: 1px 0px 0 #a1a8af;
+            background: #71757d;
+        }
     }
+}
+
+.card-tags .card-provider {
+    font-size: 12px;
 }
 
 .score-value {
@@ -84,30 +109,62 @@
     border-radius: 3px;
 }
 
-.card-provider-fa {
-    color: #9cc4e6;
-}
+.card-hot {
 
-.card-provider-im {
-    color: #ffd745;
-}
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    background: #f93e7a;
+    padding: 8px 14px;
+    border-bottom-left-radius: 4px;
+    color: #ffffff;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 12px;
 
-.tag {
+    span {
 
-    &.hot {
-        background: #ff0b42bb;
-        color: #f8ffff;
-    }
-
-    &.new {
-        background: #3165ffbb;
-        color: #f8ffff;
     }
 }
+
+
+
+
+    
+.card-new {
+    position: absolute;
+    left: 100%;
+    bottom: 0;
+    white-space: nowrap;
+    letter-spacing: -.3px;
+    font-size: 14px;
+    font-weight: 300;
+    border-top-right-radius: 4px;
+    background: #161719;
+    color: #fff;
+    padding: 6px 7px 6px 10px;
+
+    span {
+        font-size: 12px;
+    }
+}
+
+.netflix-logo {
+    color: #e50914;
+    font-style: normal;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 700;
+    display: inline-block;
+    padding-right: 3px;
+    padding-left: 2px;
+}
+
 
 .card-title {
-    padding: 25px 20px 4px;
+    padding: 18px 20px 6px;
     font-size: 18px;
+    font-weight: 500;
+    line-height: 1.3;
 }
 
 .grid-item-x .card-title {
@@ -115,7 +172,7 @@
 }
 
 .card-extra {
-    padding: 0 15px 5px;
+    padding: 0 20px 5px;
 }
 
 .card-excerpt {
@@ -123,9 +180,9 @@
 }
 
 .card-program {
-    font-weight: 400;
-    padding-top: 8px;
-    color: #b8bed2;
+    font-size: 12px;
+    padding: 6px 6px 0;
+    font-weight: 300;
 
     .dropdown {
         display: none;
@@ -143,6 +200,17 @@
         &:hover {
             background: #37383e;
         }
+    }
+
+    .card-season {
+        background: #f7f8f9;
+        display: inline-block;
+        line-height: 1.2;
+        padding: 2px 3px 1px;
+        border-radius: 3px;
+        border: 1px solid #ebedf2;
+        box-shadow: 0 1px 2px 0 rgba(88, 88, 102, 0.07);
+        margin-top: 4px;
     }
 }
 
@@ -194,24 +262,57 @@
 
 .thumb {
     overflow: hidden;
+    position: relative;
+    border-radius: 4px 4px 0px 0; //para que el zoom de la imagen respete el border-radius
+
+    &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        background-image: radial-gradient(circle at 10% 95%, #161719 0%, #16171900 50%);
+        //background-image: linear-gradient(45deg, #161719a6 30%, #16171900 30%);
+    }
 }
 
 .no-thumb {
     background: #28292d;
     border-radius: 8px 8px 0 0;
+    height: 195px;
+}
+
+
+.poster {
+    width: 25%;
+    position: absolute;
+    bottom: 0;
+    left: 4%;
 }
 
 .poster img {
-    width: 25%;
-    position: absolute;
-    bottom: -10px;
-    border-radius: 4px;
-    box-shadow: 0 0 1px 1px #202124;
-    left: 20px;
+    position: relative;
+    z-index: 9;
+    border-radius: 4px 4px 0 0;
 }
 
 .no-thumb .poster img {
     position: relative;
+}
+
+.score-value {
+    letter-spacing: -.5px;
+
+    i {
+        font-size: 12px;
+        font-style: italic;
+        padding-right: 2px;
+    }
+
+    small {
+        padding-left: 1px;
+    }
 }
 
 .country-andorra { background-position: -3px -3px; width: 19px; margin: 0 3px 0 0; }

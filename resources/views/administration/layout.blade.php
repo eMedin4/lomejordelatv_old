@@ -13,7 +13,7 @@
     <header>
         <div class="wrap">
             <div class="top-bar">
-                <h1 class="title"><a href="{{route('dashboard')}}">Panel de Administración</a></h1>
+                <h1 class="title"><a href="">Panel de Administración</a></h1>
                 <ul class="nav-main">
                     <li> {{ Auth::user()->name }}</li>
                     <li> <a href="{{ route('logout') }}">Salir</a> </li>
@@ -27,5 +27,7 @@
         </div>
     </main>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{ asset('/js/administration.js') }}"></script>
 </body>
 </html>
